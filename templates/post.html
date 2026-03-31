@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="|${post.spec.title} · ${site.title}|">文章标题 · Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+    <script
+      defer
+      th:src="@{/assets/js/reader.js?v={version}(version=${theme.spec.version})}"
+    ></script>
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--reader">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--reader" role="main">
+      <div class="post-layout" th:with="postCursor=${postFinder.cursor(post.metadata.name)}">
+        <article class="post-article">
+          <header class="post-header">
+            <!-- 文章页页眉标识；如果你想改成“正文”“章节正文”等，可直接修改这里。 -->
+            <p class="page-label">章节</p>
+            <!-- 文章标题与正文内容都来自 Halo 文章数据，无需在模板里手填。 -->
+            <h1 class="post-title" th:text="${post.spec.title}">文章标题</h1>
+            <p class="post-meta">
+              <time
+                th:datetime="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                th:text="${#dates.format(post.spec.publishTime, 'yyyy.MM.dd')}"
+              >
+                2026.03.31
+              </time>
+            </p>
+          </header>
+
+          <!-- 正文区域输出文章 HTML 内容。 -->
+          <div class="post-content" data-reader-content th:utext="${post.content.content}"></div>
+
+          <!-- 章节导航会自动根据上一篇和下一篇文章生成。 -->
+          <nav class="post-navigation" aria-label="章节导航">
+            <a
+              class="post-navigation-link"
+              th:if="${postCursor.hasPrevious()}"
+              th:href="${postCursor.previous.status.permalink}"
+            >
+              <span class="post-navigation-label">上一章</span>
+              <strong class="post-navigation-title" th:text="${postCursor.previous.spec.title}">
+                上一章标题
+              </strong>
+            </a>
+            <span class="post-navigation-spacer" th:unless="${postCursor.hasPrevious()}" aria-hidden="true"></span>
+
+            <a class="post-navigation-link post-navigation-link--center" th:href="@{/archives}">
+              <span class="post-navigation-label">目录</span>
+            </a>
+
+            <a
+              class="post-navigation-link post-navigation-link--next"
+              th:if="${postCursor.hasNext()}"
+              th:href="${postCursor.next.status.permalink}"
+            >
+              <span class="post-navigation-label">下一章</span>
+              <strong class="post-navigation-title" th:text="${postCursor.next.spec.title}">
+                下一章标题
+              </strong>
+            </a>
+            <span class="post-navigation-spacer" th:unless="${postCursor.hasNext()}" aria-hidden="true"></span>
+          </nav>
+        </article>
+
+        <aside class="post-sidebar" aria-label="文章目录">
+          <div class="post-outline" data-reader-outline hidden>
+            <p class="page-label">目录</p>
+            <div class="post-outline-body" data-reader-outline-body></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer site-footer--reader">
+      <halo:footer />
+    </footer>
+
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+    </nav>
+
+    <div class="image-lightbox" data-reader-lightbox hidden aria-hidden="true">
+      <button type="button" class="image-lightbox-close" data-reader-lightbox-close aria-label="关闭全屏图片">
+        返回阅读
+      </button>
+      <figure class="image-lightbox-figure">
+        <img class="image-lightbox-image" data-reader-lightbox-image alt="" />
+        <figcaption class="image-lightbox-caption" data-reader-lightbox-caption></figcaption>
+      </figure>
+    </div>
+  </body>
+</html>

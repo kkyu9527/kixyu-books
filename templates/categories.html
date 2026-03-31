@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="|分类 · ${site.title}|">分类 · Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--wide">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <a class="masthead-link is-current" th:href="@{/categories}">分类</a>
+        <a class="masthead-link" th:href="@{/tags}">标签</a>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--wide" role="main">
+      <section class="catalog-page">
+        <header class="book-heading">
+          <p class="page-label">分类</p>
+          <h1 class="page-title">分类</h1>
+        </header>
+
+        <th:block th:with="categoryItems=${categories}">
+          <p class="empty-state" th:if="${#lists.isEmpty(categoryItems)}">暂时还没有分类。</p>
+
+          <th:block th:unless="${#lists.isEmpty(categoryItems)}">
+            <th:block th:fragment="renderCategoryTree(items, depth)">
+              <ul class="taxonomy-list" th:classappend="${depth gt 0 ? ' taxonomy-list--nested' : ''}">
+                <li class="taxonomy-item" th:each="item : ${items}">
+                  <a class="taxonomy-link" th:href="${item.status.permalink}" th:text="${item.spec.displayName}">
+                    分类名称
+                  </a>
+                  <th:block th:if="${not #lists.isEmpty(item.children)}">
+                    <th:block th:replace="~{::renderCategoryTree(items=${item.children}, depth=${depth + 1})}" />
+                  </th:block>
+                </li>
+              </ul>
+            </th:block>
+
+            <th:block th:replace="~{::renderCategoryTree(items=${categoryItems}, depth=0)}" />
+          </th:block>
+        </th:block>
+      </section>
+    </main>
+
+    <footer class="site-footer site-footer--wide">
+      <halo:footer />
+    </footer>
+  </body>
+</html>

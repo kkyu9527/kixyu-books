@@ -13,11 +13,34 @@
       th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
     />
   </head>
-  <body class="theme-root">
-    <main class="page-shell" role="main">
-      <!-- Minimal homepage shell; page structure will be introduced incrementally. -->
+  <body class="theme-root theme-cover">
+    <main class="cover-page" role="main">
+      <section class="cover-card">
+        <!-- 封面页角标文案；如果你后续想换成“序章”“卷首”等，可直接修改这里。 -->
+        <p class="cover-mark">封面</p>
+        <!-- 封面主标题默认读取站点标题；如需固定文案，可改为你自己的文本。 -->
+        <h1 class="cover-title" th:text="${site.title}">Kixyu Books</h1>
+        <!-- 封面副标题默认读取站点副标题；如需固定引言或主题说明，可在这里替换。 -->
+        <p
+          class="cover-subtitle"
+          th:if="${not #strings.isEmpty(site.subtitle)}"
+          th:text="${site.subtitle}"
+        >
+          A quiet place for reading.
+        </p>
+        <div class="cover-actions">
+          <!-- 主入口按钮，默认进入序页。 -->
+          <a class="button button--primary" th:href="@{/about}">序</a>
+          <!-- 目录入口。 -->
+          <a class="button" th:href="@{/archives}">目录</a>
+          <!-- 分类入口。 -->
+          <a class="button" th:href="@{/categories}">分类</a>
+          <!-- 标签入口。 -->
+          <a class="button" th:href="@{/tags}">标签</a>
+        </div>
+      </section>
     </main>
-    <footer class="site-footer">
+    <footer class="site-footer site-footer--cover">
       <halo:footer />
     </footer>
   </body>

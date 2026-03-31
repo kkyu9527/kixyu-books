@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="|目录 · ${site.title}|">目录 · Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--wide">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link is-current" th:href="@{/archives}">目录</a>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--wide" role="main">
+      <section class="catalog-page">
+        <header class="book-heading">
+          <!-- 目录页眉标题；如果你希望叫“章节目录”“全书目录”，修改这里即可。 -->
+          <p class="page-label">目录</p>
+          <h1 class="page-title">目录</h1>
+        </header>
+
+        <!-- 目录内容来自 Halo 的归档数据，你后续只需要维护文章本身，不需要手写这里的列表。 -->
+        <div class="catalog-groups" th:if="${archives.total gt 0}">
+          <section class="catalog-section" th:each="archive : ${archives.items}">
+            <div class="catalog-year">
+              <h2 th:text="${archive.year}">2026</h2>
+            </div>
+            <div class="catalog-months">
+              <section class="catalog-month" th:each="month : ${archive.months}">
+                <h3 class="catalog-month-title" th:text="${month.month} + ' 月'">3 月</h3>
+                <ol class="catalog-list">
+                  <li class="catalog-item" th:each="post : ${month.posts}">
+                    <a class="catalog-link" th:href="${post.status.permalink}">
+                      <span class="catalog-item-title" th:text="${post.spec.title}">章节标题</span>
+                      <time
+                        class="catalog-item-date"
+                        th:datetime="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                        th:text="${#dates.format(post.spec.publishTime, 'MM.dd')}"
+                      >
+                        03.31
+                      </time>
+                    </a>
+                  </li>
+                </ol>
+              </section>
+            </div>
+          </section>
+        </div>
+
+        <p class="empty-state" th:if="${archives.total == 0}">目录暂时为空。</p>
+
+        <nav class="pager" th:if="${archives.hasPrevious() or archives.hasNext()}">
+          <a class="pager-link" th:if="${archives.hasPrevious()}" th:href="${archives.prevUrl}">上一页</a>
+          <span class="pager-current" th:text="|第 ${archives.page} / ${archives.totalPages} 页|">
+            第 1 / 1 页
+          </span>
+          <a class="pager-link" th:if="${archives.hasNext()}" th:href="${archives.nextUrl}">下一页</a>
+        </nav>
+      </section>
+    </main>
+
+    <footer class="site-footer site-footer--wide">
+      <halo:footer />
+    </footer>
+  </body>
+</html>

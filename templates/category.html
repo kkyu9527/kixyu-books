@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="|${category.spec.displayName} · 分类 · ${site.title}|">分类 · Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--wide">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <a class="masthead-link is-current" th:href="@{/categories}">分类</a>
+        <a class="masthead-link" th:href="@{/tags}">标签</a>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--wide" role="main">
+      <section class="catalog-page">
+        <header class="book-heading">
+          <p class="page-label">分类</p>
+          <h1 class="page-title" th:text="${category.spec.displayName}">分类名称</h1>
+        </header>
+
+        <ol class="chapter-list" th:if="${posts.total gt 0}">
+          <li class="chapter-item" th:each="item : ${posts.items}">
+            <a class="chapter-link" th:href="${item.status.permalink}">
+              <div class="chapter-heading">
+                <span class="chapter-title" th:text="${item.spec.title}">文章标题</span>
+                <time
+                  class="chapter-date"
+                  th:datetime="${#dates.format(item.spec.publishTime, 'yyyy-MM-dd')}"
+                  th:text="${#dates.format(item.spec.publishTime, 'yyyy.MM.dd')}"
+                >
+                  2026.03.31
+                </time>
+              </div>
+              <p
+                class="chapter-excerpt"
+                th:if="${not #strings.isEmpty(item.status.excerpt)}"
+                th:text="${item.status.excerpt}"
+              >
+                文章摘要
+              </p>
+            </a>
+          </li>
+        </ol>
+
+        <p class="empty-state" th:if="${posts.total == 0}">这个分类下还没有文章。</p>
+
+        <nav class="pager" th:if="${posts.hasPrevious() or posts.hasNext()}">
+          <a class="pager-link" th:if="${posts.hasPrevious()}" th:href="${posts.prevUrl}">上一页</a>
+          <span class="pager-current" th:text="|第 ${posts.page} / ${posts.totalPages} 页|">第 1 / 1 页</span>
+          <a class="pager-link" th:if="${posts.hasNext()}" th:href="${posts.nextUrl}">下一页</a>
+        </nav>
+      </section>
+    </main>
+
+    <footer class="site-footer site-footer--wide">
+      <halo:footer />
+    </footer>
+
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+    </nav>
+  </body>
+</html>

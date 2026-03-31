@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="|${singlePage.spec.title} · ${site.title}|">页面标题 · Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+    <script
+      defer
+      th:src="@{/assets/js/reader.js?v={version}(version=${theme.spec.version})}"
+    ></script>
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--reader">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--reader" role="main">
+      <article class="post-article page-article">
+        <header class="post-header">
+          <p class="page-label">页面</p>
+          <h1 class="post-title" th:text="${singlePage.spec.title}">页面标题</h1>
+        </header>
+
+        <div class="post-content" data-reader-content th:utext="${singlePage.content.content}"></div>
+      </article>
+    </main>
+
+    <footer class="site-footer site-footer--reader">
+      <halo:footer />
+    </footer>
+
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+    </nav>
+
+    <div class="image-lightbox" data-reader-lightbox hidden aria-hidden="true">
+      <button type="button" class="image-lightbox-close" data-reader-lightbox-close aria-label="关闭全屏图片">
+        返回阅读
+      </button>
+      <figure class="image-lightbox-figure">
+        <img class="image-lightbox-image" data-reader-lightbox-image alt="" />
+        <figcaption class="image-lightbox-caption" data-reader-lightbox-caption></figcaption>
+      </figure>
+    </div>
+  </body>
+</html>
