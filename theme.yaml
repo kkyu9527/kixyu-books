@@ -11,14 +11,14 @@ spec:
   logo: "https://oss.kixyu9527.com/blog/20251112/28553923-55C5-46A3-B738-E6769A0BDEEB.png"
   homepage: "https://kixyu9527.com"
   # 填写主题源码仓库地址，必须是完整 URL。
-  repo: "https://example.com/repository.git"
+  repo: "https://github.com/kkyu9527/kixyu-books.git"
   # 填写主题问题反馈地址，通常是仓库的 Issues 页面。
-  issues: "https://example.com/issues"
-  version: 0.6.0
+  issues: "https://github.com/kkyu9527/kixyu-books/issues"
+  version: 0.6.1
   requires: ">2.23.0"
   license:
     - name: "MIT"
-      url: "https://opensource.org/license/mit"
+      url: "https://github.com/kkyu9527/kixyu-books/blob/main/LICENSE"
   # 在主题根目录新增 settings.yaml再取消下面两项注释，。
   # settingName: "kixyu-books-setting"
   # configMapName: "kixyu-books-configMap"
