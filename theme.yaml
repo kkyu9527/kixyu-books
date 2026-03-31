@@ -14,7 +14,7 @@ spec:
   repo: "https://github.com/kkyu9527/kixyu-books.git"
   # 填写主题问题反馈地址，通常是仓库的 Issues 页面。
   issues: "https://github.com/kkyu9527/kixyu-books/issues"
-  version: 0.6.1
+  version: 0.6.2
   requires: ">2.23.0"
   license:
     - name: "MIT"
