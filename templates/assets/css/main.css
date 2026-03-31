@@ -1,0 +1,51 @@
+:root {
+  --kb-color-bg: #f7f3eb;
+  --kb-color-text: #1f1b16;
+  --kb-color-muted: #6f675f;
+  --kb-page-width: 46rem;
+  --kb-page-gutter: 1.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  background: var(--kb-color-bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--kb-color-text);
+  background: var(--kb-color-bg);
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+  line-height: 1.75;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+.page-shell {
+  min-height: calc(100vh - 4rem);
+  width: min(100%, var(--kb-page-width));
+  margin: 0 auto;
+  padding: 4rem var(--kb-page-gutter) 3rem;
+}
+
+.site-footer {
+  width: min(100%, var(--kb-page-width));
+  margin: 0 auto;
+  padding: 0 var(--kb-page-gutter) 2rem;
+  color: var(--kb-color-muted);
+  font-size: 0.875rem;
+}

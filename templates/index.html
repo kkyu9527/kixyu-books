@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="${site.title}">Kixyu Books</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
+    />
+  </head>
+  <body class="theme-root">
+    <main class="page-shell" role="main">
+      <!-- Minimal homepage shell; page structure will be introduced incrementally. -->
+    </main>
+    <footer class="site-footer">
+      <halo:footer />
+    </footer>
+  </body>
+</html>

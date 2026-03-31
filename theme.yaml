@@ -1,0 +1,8 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: kixyu-books
+spec:
+  displayName: Kixyu Books
+  version: 0.1.0
+  requires: 2.0.0
