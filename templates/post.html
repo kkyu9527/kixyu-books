@@ -22,10 +22,7 @@
         document.documentElement.dataset.colorScheme = scheme;
       })();
     </script>
-    <link
-      rel="stylesheet"
-      th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
-    />
+    <th:block th:replace="~{fragments/assets :: themeStyles(${theme.spec.version})}"></th:block>
     <script
       defer
       th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"

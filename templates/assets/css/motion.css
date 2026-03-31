@@ -1,0 +1,17 @@
+@keyframes kb-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(47, 36, 24, 0.45);
+  outline-offset: 3px;
+}

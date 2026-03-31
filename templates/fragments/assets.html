@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+  <th:block th:fragment="themeStyles(version)">
+    <link rel="stylesheet" th:href="@{/assets/css/base.css?v={version}(version=${version})}" />
+    <link rel="stylesheet" th:href="@{/assets/css/catalog.css?v={version}(version=${version})}" />
+    <link rel="stylesheet" th:href="@{/assets/css/reader.css?v={version}(version=${version})}" />
+    <link rel="stylesheet" th:href="@{/assets/css/components.css?v={version}(version=${version})}" />
+    <link rel="stylesheet" th:href="@{/assets/css/motion.css?v={version}(version=${version})}" />
+    <link rel="stylesheet" th:href="@{/assets/css/responsive.css?v={version}(version=${version})}" />
+  </th:block>
+</html>
