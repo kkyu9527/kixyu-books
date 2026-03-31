@@ -1406,6 +1406,10 @@ button:focus-visible {
     text-align: center;
   }
 
+  .cover-index-link:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
   .cover-index-link::after {
     display: none;
   }
