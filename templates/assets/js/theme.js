@@ -110,6 +110,30 @@
   function bindPageJumpForms() {
     var forms = document.querySelectorAll("[data-page-jump-form]");
 
+    function buildPageUrl(patternUrl, page) {
+      var url = new URL(patternUrl || window.location.href, window.location.href);
+      var pathname = url.pathname;
+      var pagePathPattern = /\/page\/\d+\/?$/;
+
+      if (pagePathPattern.test(pathname)) {
+        if (page <= 1) {
+          url.pathname = pathname.replace(pagePathPattern, "/");
+        } else {
+          url.pathname = pathname.replace(pagePathPattern, "/page/" + page);
+        }
+
+        return url.toString();
+      }
+
+      if (page <= 1) {
+        url.searchParams.delete("page");
+      } else {
+        url.searchParams.set("page", String(page));
+      }
+
+      return url.toString();
+    }
+
     forms.forEach(function (form) {
       form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -132,15 +156,13 @@
         }
 
         var nextPage = Math.min(Math.max(currentPage, 1), maxPage);
-        var url = new URL(window.location.href);
+        var prevUrl = form.dataset.pagePrevUrl;
+        var nextUrl = form.dataset.pageNextUrl;
+        var currentUrl = window.location.href;
+        var patternUrl = nextPage > 1 ? (nextUrl || prevUrl || currentUrl) : (prevUrl || nextUrl || currentUrl);
 
-        if (nextPage <= 1) {
-          url.searchParams.delete("page");
-        } else {
-          url.searchParams.set("page", String(nextPage));
-        }
-
-        window.location.href = url.toString();
+        input.value = String(nextPage);
+        window.location.assign(buildPageUrl(patternUrl, nextPage));
       });
     });
   }

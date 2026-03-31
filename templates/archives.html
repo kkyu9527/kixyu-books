@@ -91,23 +91,45 @@
 
         <p class="empty-state" th:if="${archives.total == 0}">目录暂时为空。</p>
 
-        <nav class="pager" th:if="${archives.hasPrevious() or archives.hasNext()}">
-          <a class="pager-link" th:if="${archives.hasPrevious()}" th:href="${archives.prevUrl}">上一页</a>
-          <span class="pager-current" th:text="|第 ${archives.page} / ${archives.totalPages} 页|">
-            第 1 / 1 页
-          </span>
-          <form class="pager-jump" data-page-jump-form th:if="${archives.totalPages gt 1}">
-            <input
-              class="pager-input"
-              data-page-jump-input
-              type="number"
-              inputmode="numeric"
-              min="1"
-              th:attr="max=${archives.totalPages}, value=${archives.page}, aria-label=|输入页码后跳转，范围 1 到 ${archives.totalPages}|"
-            />
-            <button class="pager-link pager-link--button" type="submit">跳转</button>
-          </form>
-          <a class="pager-link" th:if="${archives.hasNext()}" th:href="${archives.nextUrl}">下一页</a>
+        <nav class="pager" th:if="${archives.hasPrevious() or archives.hasNext()}" aria-label="目录分页导航">
+          <div class="pager-slot pager-slot--previous">
+            <a class="pager-link" th:if="${archives.hasPrevious()}" th:href="${archives.prevUrl}" rel="prev">上一页</a>
+            <span class="pager-link pager-link--disabled" th:unless="${archives.hasPrevious()}" aria-disabled="true">
+              上一页
+            </span>
+          </div>
+          <div class="pager-center">
+            <span class="pager-current" th:text="|第 ${archives.page} / ${archives.totalPages} 页|">
+              第 1 / 1 页
+            </span>
+            <form
+              class="pager-jump"
+              data-page-jump-form
+              method="get"
+              th:action="@{/archives}"
+              th:attr="data-page-current=${archives.page}, data-page-prev-url=${archives.prevUrl}, data-page-next-url=${archives.nextUrl}"
+            >
+              <label class="pager-jump-label" for="archive-page-jump">跳至</label>
+              <input
+                id="archive-page-jump"
+                class="pager-input"
+                data-page-jump-input
+                name="page"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                th:attr="max=${archives.totalPages}, value=${archives.page}, aria-label=|输入页码后跳转，范围 1 到 ${archives.totalPages}|"
+              />
+              <span class="pager-jump-unit">页</span>
+              <button class="pager-link pager-link--button" type="submit">前往</button>
+            </form>
+          </div>
+          <div class="pager-slot pager-slot--next">
+            <a class="pager-link" th:if="${archives.hasNext()}" th:href="${archives.nextUrl}" rel="next">下一页</a>
+            <span class="pager-link pager-link--disabled" th:unless="${archives.hasNext()}" aria-disabled="true">
+              下一页
+            </span>
+          </div>
         </nav>
       </section>
     </main>
