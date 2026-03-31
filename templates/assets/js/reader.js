@@ -19,10 +19,13 @@
       return;
     }
 
+    const mobileOutline = bindMobileOutline(outline);
+
     const headings = Array.from(contentRoot.querySelectorAll("h1, h2, h3, h4, h5, h6"));
 
     if (!headings.length) {
       outline.hidden = true;
+      mobileOutline.setAvailable(false);
       return;
     }
 
@@ -30,12 +33,14 @@
 
     if (!groups.length) {
       outline.hidden = true;
+      mobileOutline.setAvailable(false);
       return;
     }
 
     outline.hidden = false;
-    renderOutline(groups, outlineBody, behavior);
-    bindOutlineState(groups, outlineBody);
+    mobileOutline.setAvailable(true);
+    renderOutline(groups, outlineBody, behavior, mobileOutline);
+    bindOutlineState(groups, outlineBody, mobileOutline);
   }
 
   function buildGroups(headings) {
@@ -73,7 +78,7 @@
     return groups;
   }
 
-  function renderOutline(groups, outlineBody, behavior) {
+  function renderOutline(groups, outlineBody, behavior, mobileOutline) {
     outlineBody.innerHTML = "";
 
     groups.forEach((group, index) => {
@@ -97,6 +102,8 @@
 
       const children = document.createElement("div");
       children.className = "post-outline-children";
+      const childrenInner = document.createElement("div");
+      childrenInner.className = "post-outline-children-inner";
 
       group.items.slice(1).forEach((item) => {
         const link = document.createElement("a");
@@ -106,10 +113,11 @@
         link.dataset.groupId = group.id;
         link.dataset.depth = String(item.level - group.level);
         link.textContent = item.title;
-        children.appendChild(link);
+        childrenInner.appendChild(link);
       });
 
-      if (children.childElementCount > 0) {
+      if (childrenInner.childElementCount > 0) {
+        children.appendChild(childrenInner);
         section.appendChild(children);
       }
 
@@ -134,17 +142,25 @@
         behavior: behavior,
         block: "start",
       });
+
+      mobileOutline.close();
     });
   }
 
-  function bindOutlineState(groups, outlineBody) {
-    const headings = groups.flatMap((group) =>
-      group.items.map((item) => ({
-        id: item.id,
-        groupId: group.id,
-        element: item.element,
-      }))
-    );
+  function bindOutlineState(groups, outlineBody, mobileOutline) {
+    const headings = [];
+
+    groups.forEach((group) => {
+      group.items.forEach((item) => {
+        headings.push({
+          id: item.id,
+          groupId: group.id,
+          title: item.title,
+          groupTitle: group.title,
+          element: item.element,
+        });
+      });
+    });
 
     let ticking = false;
 
@@ -179,6 +195,8 @@
         const isActiveTarget = target.dataset.targetId === active.id;
         target.classList.toggle("is-active", isActiveTarget);
       });
+
+      mobileOutline.setCurrent(active.groupTitle || active.title);
     };
 
     const requestUpdate = function () {
@@ -195,14 +213,120 @@
     update();
   }
 
+  function bindMobileOutline(outline) {
+    const mobileBar = document.querySelector("[data-reader-outline-mobile]");
+    const mobileToggle = document.querySelector("[data-reader-outline-toggle]");
+    const mobileCurrent = document.querySelector("[data-reader-outline-current]");
+    const mobileClose = document.querySelector("[data-reader-outline-close]");
+    const mobileMedia = window.matchMedia("(max-width: 680px)");
+    const desktopHost = outline.parentElement;
+    let isAvailable = false;
+
+    const syncOutlineHost = function () {
+      if (mobileMedia.matches && mobileBar) {
+        mobileBar.appendChild(outline);
+        return;
+      }
+
+      if (desktopHost) {
+        desktopHost.appendChild(outline);
+      }
+    };
+
+    const setOpen = function (isOpen) {
+      outline.classList.toggle("is-open", isOpen);
+
+      if (mobileToggle) {
+        mobileToggle.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      const indicator = mobileToggle
+        ? mobileToggle.querySelector(".post-mobile-outline-indicator")
+        : null;
+
+      if (indicator) {
+        indicator.textContent = isOpen ? "收起" : "展开";
+      }
+    };
+
+    const open = function () {
+      if (!isAvailable || !mobileMedia.matches) {
+        return;
+      }
+
+      setOpen(true);
+    };
+
+    const close = function () {
+      setOpen(false);
+    };
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener("click", function () {
+        if (outline.classList.contains("is-open")) {
+          close();
+          return;
+        }
+
+        open();
+      });
+    }
+
+    if (mobileClose) {
+      mobileClose.addEventListener("click", close);
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && outline.classList.contains("is-open")) {
+        close();
+      }
+    });
+
+    const handleViewportChange = function () {
+      syncOutlineHost();
+
+      if (!mobileMedia.matches) {
+        close();
+      }
+    };
+
+    if (typeof mobileMedia.addEventListener === "function") {
+      mobileMedia.addEventListener("change", handleViewportChange);
+    } else if (typeof mobileMedia.addListener === "function") {
+      mobileMedia.addListener(handleViewportChange);
+    }
+
+    syncOutlineHost();
+
+    return {
+      close,
+      setAvailable: function (available) {
+        isAvailable = available;
+        syncOutlineHost();
+
+        if (mobileBar) {
+          mobileBar.hidden = !available;
+        }
+
+        if (!available) {
+          close();
+        }
+      },
+      setCurrent: function (title) {
+        if (mobileCurrent) {
+          mobileCurrent.textContent = title || "定位当前章节";
+        }
+      },
+    };
+  }
+
   function ensureHeadingId(heading, index, usedIds) {
     const rawId =
       heading.id ||
       heading.textContent
         .trim()
         .toLowerCase()
-        .normalize("NFKD")
-        .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+        .replace(/[\u0000-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007f]+/g, "-")
         .replace(/\s+/g, "-")
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "");

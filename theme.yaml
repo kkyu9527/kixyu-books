@@ -14,7 +14,7 @@ spec:
   repo: "https://example.com/repository.git"
   # 填写主题问题反馈地址，通常是仓库的 Issues 页面。
   issues: "https://example.com/issues"
-  version: 0.2.1
+  version: 0.3.7
   requires: ">=2.23.0"
   license:
     - name: "MIT"

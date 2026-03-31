@@ -7,11 +7,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
     <title th:text="|${singlePage.spec.title} · ${site.title}|">页面标题 · Kixyu Books</title>
+    <script>
+      (() => {
+        const storageKey = "kb-color-scheme-mode";
+        const stored = localStorage.getItem(storageKey);
+        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+        const scheme =
+          mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
+        document.documentElement.dataset.colorSchemeMode = mode;
+        document.documentElement.dataset.colorScheme = scheme;
+      })();
+    </script>
     <link
       rel="stylesheet"
       th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
     />
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
     <script
       defer
       th:src="@{/assets/js/reader.js?v={version}(version=${theme.spec.version})}"
@@ -22,6 +40,10 @@
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
         <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+          <span class="theme-switch-mark" aria-hidden="true"></span>
+          <span class="theme-switch-text" data-theme-label>跟随系统</span>
+        </button>
       </nav>
     </header>
 
@@ -33,6 +55,18 @@
         </header>
 
         <div class="post-content" data-reader-content th:utext="${singlePage.content.content}"></div>
+
+        <div class="preface-actions" th:if="${singlePage.metadata.name == 'about'}">
+          <a class="button button--primary" th:href="@{/archives}">开始阅读</a>
+        </div>
+
+        <section id="comment" class="page-comment" th:if="${haloCommentEnabled}">
+          <header class="page-comment-header">
+            <p class="page-label">留言</p>
+            <h2 class="page-comment-title">留下你的阅读回音</h2>
+          </header>
+          <halo:comment group="content.halo.run" kind="SinglePage" th:attr="name=${singlePage.metadata.name}" />
+        </section>
       </article>
     </main>
 

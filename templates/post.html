@@ -7,11 +7,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
     <title th:text="|${post.spec.title} · ${site.title}|">文章标题 · Kixyu Books</title>
+    <script>
+      (() => {
+        const storageKey = "kb-color-scheme-mode";
+        const stored = localStorage.getItem(storageKey);
+        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+        const scheme =
+          mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
+        document.documentElement.dataset.colorSchemeMode = mode;
+        document.documentElement.dataset.colorScheme = scheme;
+      })();
+    </script>
     <link
       rel="stylesheet"
       th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
     />
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
     <script
       defer
       th:src="@{/assets/js/reader.js?v={version}(version=${theme.spec.version})}"
@@ -22,11 +40,41 @@
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
         <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+          <span class="theme-switch-mark" aria-hidden="true"></span>
+          <span class="theme-switch-text" data-theme-label>跟随系统</span>
+        </button>
       </nav>
     </header>
 
     <main class="page-shell page-shell--reader" role="main">
+      <div class="post-mobile-outline-bar" data-reader-outline-mobile hidden>
+        <button
+          type="button"
+          class="post-mobile-outline-toggle"
+          data-reader-outline-toggle
+          aria-expanded="false"
+          aria-controls="post-outline-panel"
+        >
+          <span class="post-mobile-outline-label">目录</span>
+          <span class="post-mobile-outline-current" data-reader-outline-current>定位当前章节</span>
+          <span class="post-mobile-outline-indicator" aria-hidden="true">展开</span>
+        </button>
+      </div>
+
       <div class="post-layout" th:with="postCursor=${postFinder.cursor(post.metadata.name)}">
+        <aside class="post-sidebar" aria-label="文章目录">
+          <div class="post-outline" data-reader-outline hidden id="post-outline-panel">
+            <div class="post-outline-head">
+              <p class="page-label">目录</p>
+              <button type="button" class="post-outline-close" data-reader-outline-close aria-label="收起目录">
+                收起
+              </button>
+            </div>
+            <div class="post-outline-body" data-reader-outline-body></div>
+          </div>
+        </aside>
+
         <article class="post-article">
           <header class="post-header">
             <!-- 文章页页眉标识；如果你想改成“正文”“章节正文”等，可直接修改这里。 -->
@@ -77,13 +125,6 @@
             <span class="post-navigation-spacer" th:unless="${postCursor.hasNext()}" aria-hidden="true"></span>
           </nav>
         </article>
-
-        <aside class="post-sidebar" aria-label="文章目录">
-          <div class="post-outline" data-reader-outline hidden>
-            <p class="page-label">目录</p>
-            <div class="post-outline-body" data-reader-outline-body></div>
-          </div>
-        </aside>
       </div>
     </main>
 

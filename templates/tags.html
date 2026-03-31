@@ -7,11 +7,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
     <title th:text="|标签 · ${site.title}|">标签 · Kixyu Books</title>
+    <script>
+      (() => {
+        const storageKey = "kb-color-scheme-mode";
+        const stored = localStorage.getItem(storageKey);
+        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+        const scheme =
+          mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
+        document.documentElement.dataset.colorSchemeMode = mode;
+        document.documentElement.dataset.colorScheme = scheme;
+      })();
+    </script>
     <link
       rel="stylesheet"
       th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
     />
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
@@ -20,6 +38,10 @@
         <a class="masthead-link" th:href="@{/archives}">目录</a>
         <a class="masthead-link" th:href="@{/categories}">分类</a>
         <a class="masthead-link is-current" th:href="@{/tags}">标签</a>
+        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+          <span class="theme-switch-mark" aria-hidden="true"></span>
+          <span class="theme-switch-text" data-theme-label>跟随系统</span>
+        </button>
       </nav>
     </header>
 

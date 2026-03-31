@@ -7,36 +7,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
     <title th:text="${site.title}">Kixyu Books</title>
+    <script>
+      (() => {
+        const storageKey = "kb-color-scheme-mode";
+        const stored = localStorage.getItem(storageKey);
+        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+        const scheme =
+          mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
+        document.documentElement.dataset.colorSchemeMode = mode;
+        document.documentElement.dataset.colorScheme = scheme;
+      })();
+    </script>
     <link
       rel="stylesheet"
       th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}"
     />
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
   </head>
   <body class="theme-root theme-cover">
     <main class="cover-page" role="main">
       <section class="cover-card">
-        <!-- 封面页角标文案；如果你后续想换成“序章”“卷首”等，可直接修改这里。 -->
-        <p class="cover-mark">封面</p>
-        <!-- 封面主标题默认读取站点标题；如需固定文案，可改为你自己的文本。 -->
-        <h1 class="cover-title" th:text="${site.title}">Kixyu Books</h1>
-        <!-- 封面副标题默认读取站点副标题；如需固定引言或主题说明，可在这里替换。 -->
-        <p
-          class="cover-subtitle"
-          th:if="${not #strings.isEmpty(site.subtitle)}"
-          th:text="${site.subtitle}"
-        >
-          A quiet place for reading.
-        </p>
+        <div class="cover-tools">
+          <button type="button" class="theme-switch" data-theme-toggle aria-label="切换颜色模式">
+            <span class="theme-switch-mark" aria-hidden="true"></span>
+            <span class="theme-switch-text" data-theme-label>跟随系统</span>
+          </button>
+        </div>
+        <div class="cover-copy">
+          <!-- 封面页角标文案；如果你后续想换成“序章”“卷首”等，可直接修改这里。 -->
+          <p class="cover-mark">扉页</p>
+          <!-- 封面主标题默认读取站点标题；如需固定文案，可改为你自己的文本。 -->
+          <h1 class="cover-title" th:text="${site.title}">Kixyu Books</h1>
+          <!-- 封面副标题默认读取站点副标题；如需固定引言或主题说明，可在这里替换。 -->
+          <p
+            class="cover-subtitle"
+            th:if="${not #strings.isEmpty(site.subtitle)}"
+            th:text="${site.subtitle}"
+          >
+            A quiet place for reading.
+          </p>
+        </div>
         <div class="cover-actions">
-          <!-- 主入口按钮，默认进入序页。 -->
-          <a class="button button--primary" th:href="@{/about}">序</a>
-          <!-- 目录入口。 -->
-          <a class="button" th:href="@{/archives}">目录</a>
-          <!-- 分类入口。 -->
-          <a class="button" th:href="@{/categories}">分类</a>
-          <!-- 标签入口。 -->
-          <a class="button" th:href="@{/tags}">标签</a>
+          <div class="cover-entry">
+            <!-- 主入口按钮，默认进入序页。 -->
+            <a class="cover-entry-link" th:href="@{/about}">
+              <span class="cover-entry-title">序</span>
+              <span class="cover-entry-note">从卷首进入，先读第一段话。</span>
+            </a>
+            <!-- 目录入口，作为首页主按钮。 -->
+            <a class="button button--primary cover-entry-button" th:href="@{/archives}">开始阅读</a>
+          </div>
+          <nav class="cover-index" aria-label="辅助入口">
+            <!-- 留言入口。 -->
+            <a class="cover-index-link" th:href="@{/message}">留言</a>
+            <!-- 分类入口。 -->
+            <a class="cover-index-link" th:href="@{/categories}">分类</a>
+            <!-- 标签入口。 -->
+            <a class="cover-index-link" th:href="@{/tags}">标签</a>
+          </nav>
         </div>
       </section>
     </main>
