@@ -38,6 +38,7 @@
         <a class="masthead-link" th:href="@{/archives}">目录</a>
         <a class="masthead-link is-current" th:href="@{/categories}">分类</a>
         <a class="masthead-link" th:href="@{/tags}">标签</a>
+        <a class="masthead-link" href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer">开往</a>
         <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
           <span class="theme-switch-mark" aria-hidden="true"></span>
           <span class="theme-switch-text" data-theme-label>跟随系统</span>
@@ -46,7 +47,7 @@
     </header>
 
     <main class="page-shell page-shell--wide" role="main">
-      <section class="catalog-page">
+      <section class="catalog-page catalog-page--taxonomy">
         <header class="book-heading">
           <p class="page-label">分类</p>
           <h1 class="page-title">分类</h1>
@@ -59,8 +60,9 @@
             <th:block th:fragment="renderCategoryTree(items, depth)">
               <ul class="taxonomy-list" th:classappend="${depth gt 0 ? ' taxonomy-list--nested' : ''}">
                 <li class="taxonomy-item" th:each="item : ${items}">
-                  <a class="taxonomy-link" th:href="${item.status.permalink}" th:text="${item.spec.displayName}">
-                    分类名称
+                  <a class="taxonomy-link" th:href="${item.status.permalink}">
+                    <span class="taxonomy-name" th:text="${item.spec.displayName}">分类名称</span>
+                    <span class="taxonomy-count" th:text="|${item.postCount} 篇|">0 篇</span>
                   </a>
                   <th:block th:if="${not #lists.isEmpty(item.children)}">
                     <th:block th:replace="~{::renderCategoryTree(items=${item.children}, depth=${depth + 1})}" />

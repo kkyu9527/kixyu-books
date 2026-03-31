@@ -57,7 +57,7 @@
         <div class="cover-actions">
           <div class="cover-entry">
             <!-- 主入口按钮，默认进入序页。 -->
-            <a class="cover-entry-link" th:href="@{/about}">
+            <a class="cover-entry-link" th:href="@{/preface}">
               <span class="cover-entry-title">序</span>
               <span class="cover-entry-note">从卷首进入，先读第一段话。</span>
             </a>
@@ -65,12 +65,16 @@
             <a class="button button--primary cover-entry-button" th:href="@{/archives}">开始阅读</a>
           </div>
           <nav class="cover-index" aria-label="辅助入口">
-            <!-- 留言入口。 -->
-            <a class="cover-index-link" th:href="@{/message}">留言</a>
             <!-- 分类入口。 -->
             <a class="cover-index-link" th:href="@{/categories}">分类</a>
             <!-- 标签入口。 -->
             <a class="cover-index-link" th:href="@{/tags}">标签</a>
+            <!-- 关于入口。 -->
+            <a class="cover-index-link" th:href="@{/about}">关于</a>
+            <!-- 留言入口。 -->
+            <a class="cover-index-link" th:href="@{/message}">留言</a>
+            <!-- 开往入口，跳转到友链穿梭页面。 -->
+            <a class="cover-index-link" href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer">开往</a>
           </nav>
         </div>
       </section>

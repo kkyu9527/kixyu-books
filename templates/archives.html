@@ -36,6 +36,16 @@
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
         <a class="masthead-link is-current" th:href="@{/archives}">目录</a>
+        <button
+          type="button"
+          class="search-trigger"
+          data-search-trigger
+          th:if="${pluginFinder.available('PluginSearchWidget')}"
+          aria-label="打开搜索"
+          title="搜索（Ctrl+F / Command+F）"
+        >
+          搜索
+        </button>
         <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
           <span class="theme-switch-mark" aria-hidden="true"></span>
           <span class="theme-switch-text" data-theme-label>跟随系统</span>
@@ -86,6 +96,17 @@
           <span class="pager-current" th:text="|第 ${archives.page} / ${archives.totalPages} 页|">
             第 1 / 1 页
           </span>
+          <form class="pager-jump" data-page-jump-form th:if="${archives.totalPages gt 1}">
+            <input
+              class="pager-input"
+              data-page-jump-input
+              type="number"
+              inputmode="numeric"
+              min="1"
+              th:attr="max=${archives.totalPages}, value=${archives.page}, aria-label=|输入页码后跳转，范围 1 到 ${archives.totalPages}|"
+            />
+            <button class="pager-link pager-link--button" type="submit">跳转</button>
+          </form>
           <a class="pager-link" th:if="${archives.hasNext()}" th:href="${archives.nextUrl}">下一页</a>
         </nav>
       </section>

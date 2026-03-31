@@ -56,7 +56,7 @@
 
         <div class="post-content" data-reader-content th:utext="${singlePage.content.content}"></div>
 
-        <div class="preface-actions" th:if="${singlePage.metadata.name == 'about'}">
+        <div class="preface-actions" th:if="${singlePage.metadata.name == 'preface'}">
           <a class="button button--primary" th:href="@{/archives}">开始阅读</a>
         </div>
 

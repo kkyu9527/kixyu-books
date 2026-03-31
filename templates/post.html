@@ -109,7 +109,8 @@
             <span class="post-navigation-spacer" th:unless="${postCursor.hasPrevious()}" aria-hidden="true"></span>
 
             <a class="post-navigation-link post-navigation-link--center" th:href="@{/archives}">
-              <span class="post-navigation-label">目录</span>
+              <span class="post-navigation-label">回到</span>
+              <strong class="post-navigation-title post-navigation-title--index">目录</strong>
             </a>
 
             <a
@@ -124,6 +125,14 @@
             </a>
             <span class="post-navigation-spacer" th:unless="${postCursor.hasNext()}" aria-hidden="true"></span>
           </nav>
+
+          <section id="comment" class="page-comment" th:if="${haloCommentEnabled}">
+            <header class="page-comment-header">
+              <p class="page-label">评论</p>
+              <h2 class="page-comment-title">留下你的阅读回音</h2>
+            </header>
+            <halo:comment group="content.halo.run" kind="Post" th:attr="name=${post.metadata.name}" />
+          </section>
         </article>
       </div>
     </main>

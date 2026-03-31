@@ -9,13 +9,13 @@ spec:
     website: "https://kixyu9527.com"
   description: "极简风格的博客主题，类似于阅读器界面。"
   logo: "https://oss.kixyu9527.com/blog/20251112/28553923-55C5-46A3-B738-E6769A0BDEEB.png"
-  homepage: "https://example.com"
+  homepage: "https://kixyu9527.com"
   # 填写主题源码仓库地址，必须是完整 URL。
   repo: "https://example.com/repository.git"
   # 填写主题问题反馈地址，通常是仓库的 Issues 页面。
   issues: "https://example.com/issues"
-  version: 0.3.7
-  requires: ">=2.23.0"
+  version: 0.6.0
+  requires: ">2.23.0"
   license:
     - name: "MIT"
       url: "https://opensource.org/license/mit"
