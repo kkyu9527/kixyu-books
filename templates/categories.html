@@ -9,20 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
     <meta name="theme-color" content="#f4efe6" />
     <title th:text="|分类 · ${site.title}|">分类 · Kixyu Books</title>
-    <script>
-      (() => {
-        const storageKey = "kb-color-scheme-mode";
-        const stored = localStorage.getItem(storageKey);
-        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
-        const scheme =
-          mode === "system"
-            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-            : mode;
-        document.documentElement.dataset.colorSchemeMode = mode;
-        document.documentElement.dataset.colorScheme = scheme;
-      })();
-    </script>
-    <th:block th:replace="~{fragments/assets :: themeStyles(${theme.spec.version})}"></th:block>
+    <th:block th:replace="~{fragments/assets :: themeBoot(${theme.spec.version})}"></th:block>
     <script
       defer
       th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
@@ -74,8 +61,6 @@
       </section>
     </main>
 
-    <footer class="site-footer site-footer--wide">
-      <halo:footer />
-    </footer>
+    <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--wide')}"></th:block>
   </body>
 </html>

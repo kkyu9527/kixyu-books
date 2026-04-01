@@ -1,0 +1,71 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: kixyu-books-setting
+spec:
+  forms:
+    - group: style
+      label: 样式
+      formSchema:
+        - $formkit: select
+          name: color_scheme
+          label: 默认配色
+          value: system
+          options:
+            - label: 跟随系统
+              value: system
+            - label: 深色
+              value: dark
+            - label: 浅色
+              value: light
+        - $formkit: checkbox
+          name: enable_change_color_scheme
+          label: 允许访客切换配色
+          value: true
+    - group: footer
+      label: 页脚
+      formSchema:
+        - $formkit: text
+          name: title
+          label: 标题
+          help: 不填写时默认使用站点标题
+        - $formkit: textarea
+          name: slogan
+          label: 页脚说明
+          rows: 3
+          help: 不填写时默认使用站点副标题
+    - group: beian
+      label: 备案
+      formSchema:
+        - $formkit: text
+          name: icp_text
+          label: ICP 备案号
+        - $formkit: text
+          name: icp_link
+          label: ICP 备案链接
+          value: https://beian.miit.gov.cn/
+        - $formkit: text
+          name: gongan_text
+          label: 公安备案号
+        - $formkit: text
+          name: gongan_link
+          label: 公安备案链接
+          value: https://beian.mps.gov.cn/#/query/webSearch
+    - group: plugin
+      label: 插件集成
+      formSchema:
+        - $formkit: group
+          name: docsme
+          label: Docsme 文档
+          value:
+            source: theme
+          children:
+            - $formkit: select
+              name: source
+              label: 模板来源
+              value: theme
+              options:
+                - label: 使用当前主题样式
+                  value: theme
+                - label: 使用插件默认模板
+                  value: plugin

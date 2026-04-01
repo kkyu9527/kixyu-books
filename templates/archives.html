@@ -9,20 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
     <meta name="theme-color" content="#f4efe6" />
     <title th:text="|目录 · ${site.title}|">目录 · Kixyu Books</title>
-    <script>
-      (() => {
-        const storageKey = "kb-color-scheme-mode";
-        const stored = localStorage.getItem(storageKey);
-        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
-        const scheme =
-          mode === "system"
-            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-            : mode;
-        document.documentElement.dataset.colorSchemeMode = mode;
-        document.documentElement.dataset.colorScheme = scheme;
-      })();
-    </script>
-    <th:block th:replace="~{fragments/assets :: themeStyles(${theme.spec.version})}"></th:block>
+    <th:block th:replace="~{fragments/assets :: themeBoot(${theme.spec.version})}"></th:block>
     <script
       defer
       th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
@@ -54,8 +41,8 @@
       <section class="catalog-page">
         <header class="book-heading">
           <!-- 目录页眉标题；如果你希望叫“章节目录”“全书目录”，修改这里即可。 -->
-          <p class="page-label">目录</p>
-          <h1 class="page-title">目录</h1>
+          <p class="page-label">全书目录</p>
+          <h1 class="page-title">全书目录</h1>
         </header>
 
         <!-- 目录内容来自 Halo 的归档数据，你后续只需要维护文章本身，不需要手写这里的列表。 -->
@@ -131,8 +118,6 @@
       </section>
     </main>
 
-    <footer class="site-footer site-footer--wide">
-      <halo:footer />
-    </footer>
+    <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--wide')}"></th:block>
   </body>
 </html>

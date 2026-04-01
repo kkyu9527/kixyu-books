@@ -176,6 +176,56 @@ body.is-lightbox-open {
   white-space: nowrap;
 }
 
+.footer-block {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--kb-color-border);
+}
+
+.footer-brand,
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-meta {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.footer-title,
+.footer-slogan,
+.footer-records {
+  margin: 0;
+}
+
+.footer-title {
+  color: var(--kb-color-text);
+  font-size: 0.98rem;
+}
+
+.footer-slogan {
+  color: var(--kb-color-muted);
+  line-height: 1.7;
+}
+
+.footer-records {
+  color: var(--kb-color-muted);
+  line-height: 1.7;
+}
+
+.footer-record-link {
+  color: inherit;
+}
+
+.footer-record-link:hover {
+  color: var(--kb-color-text);
+}
+
 .chapter-list {
   list-style: none;
   margin: 0;

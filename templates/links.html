@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
+    <title th:text="|友情链接 · ${site.title}|">友情链接 · Kixyu Books</title>
+    <th:block th:replace="~{fragments/assets :: themeBoot(${theme.spec.version})}"></th:block>
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--wide">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <a class="masthead-link is-current" th:href="@{/links}">链接</a>
+        <button
+          type="button"
+          class="search-trigger"
+          data-search-trigger
+          th:if="${pluginFinder.available('PluginSearchWidget')}"
+          aria-label="打开搜索"
+          title="搜索（Ctrl+F / Command+F）"
+        >
+          搜索
+        </button>
+        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+          <span class="theme-switch-mark" aria-hidden="true"></span>
+          <span class="theme-switch-text" data-theme-label>跟随系统</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--wide" role="main">
+      <section class="catalog-page">
+        <header class="book-heading">
+          <p class="page-label">附录</p>
+          <h1 class="page-title">友情链接</h1>
+        </header>
+
+        <p class="empty-state" th:if="${#lists.isEmpty(groups)}">暂时还没有收录链接。</p>
+
+        <div class="link-groups" th:unless="${#lists.isEmpty(groups)}">
+          <section class="link-group" th:each="group : ${groups}">
+            <h2 class="link-group-title" th:text="${group.spec.displayName}">常去之地</h2>
+            <div class="link-card-list">
+              <a
+                class="link-card"
+                th:each="link : ${group.links}"
+                th:href="${link.spec.url}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="link-card-logo"
+                  th:src="${link.spec.logo ?: site.logo ?: theme.spec.logo}"
+                  th:alt="${link.spec.displayName}"
+                />
+                <div class="link-card-copy">
+                  <p class="link-card-title" th:text="${link.spec.displayName}">站点名称</p>
+                  <p class="link-card-description" th:text="${link.spec.description}">站点简介</p>
+                </div>
+              </a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--wide')}"></th:block>
+
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+    </nav>
+  </body>
+</html>

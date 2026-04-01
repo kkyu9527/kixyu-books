@@ -88,6 +88,28 @@
     grid-template-columns: 1fr;
   }
 
+  .footer-block {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-meta {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .link-card-list {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-wall {
+    column-count: 2;
+  }
+
+  .moment-media {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .tag-chip:nth-child(-n + 2) {
     border-top: 1px solid var(--kb-color-border);
   }
@@ -375,6 +397,14 @@
 }
 
 @media (max-width: 480px) {
+  .photo-wall {
+    column-count: 1;
+  }
+
+  .moment-media {
+    grid-template-columns: 1fr;
+  }
+
   .pager-jump {
     grid-template-columns: auto minmax(0, 4rem) auto;
   }

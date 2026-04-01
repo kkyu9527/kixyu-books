@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#f4efe6" />
+    <title th:text="|图库 · ${site.title}|">图库 · Kixyu Books</title>
+    <th:block th:replace="~{fragments/assets :: themeBoot(${theme.spec.version})}"></th:block>
+    <script
+      defer
+      th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+    ></script>
+  </head>
+  <body class="theme-root">
+    <header class="page-masthead page-masthead--wide">
+      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <nav class="masthead-nav" aria-label="主要导航">
+        <a class="masthead-link" th:href="@{/archives}">目录</a>
+        <a class="masthead-link is-current" th:href="@{/photos}">图库</a>
+        <button
+          type="button"
+          class="search-trigger"
+          data-search-trigger
+          th:if="${pluginFinder.available('PluginSearchWidget')}"
+          aria-label="打开搜索"
+          title="搜索（Ctrl+F / Command+F）"
+        >
+          搜索
+        </button>
+        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+          <span class="theme-switch-mark" aria-hidden="true"></span>
+          <span class="theme-switch-text" data-theme-label>跟随系统</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="page-shell page-shell--wide" role="main">
+      <section class="catalog-page">
+        <header class="book-heading">
+          <p class="page-label">附录</p>
+          <h1 class="page-title">图库</h1>
+        </header>
+
+        <nav class="media-filter" aria-label="图片分组">
+          <a
+            class="media-filter-link"
+            th:classappend="${#lists.isEmpty(param.group) ? ' is-current' : ''}"
+            th:href="@{/photos}"
+          >
+            全部
+          </a>
+          <a
+            class="media-filter-link"
+            th:each="group : ${photoFinder.groupBy()}"
+            th:href="@{|/photos?group=${group.metadata.name}|}"
+            th:classappend="${#lists.contains(param.group, group.metadata.name) ? ' is-current' : ''}"
+            th:text="${group.spec.displayName}"
+          >
+            分组
+          </a>
+        </nav>
+
+        <p class="empty-state" th:if="${photos.total == 0}">暂时还没有图片。</p>
+
+        <div class="photo-wall" th:if="${photos.total gt 0}">
+          <figure class="photo-card" th:each="photo : ${photos.items}">
+            <img
+              class="photo-card-image"
+              th:src="${photo.spec.url}"
+              th:srcset="|${thumbnail.gen(photo.spec.url, 's')} 400w,
+                          ${thumbnail.gen(photo.spec.url, 'm')} 800w,
+                          ${thumbnail.gen(photo.spec.url, 'l')} 1200w|"
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              th:alt="${photo.spec.displayName}"
+            />
+          </figure>
+        </div>
+
+        <nav class="pager" th:if="${photos.hasPrevious() or photos.hasNext()}">
+          <a class="pager-link" th:if="${photos.hasPrevious()}" th:href="${photos.prevUrl}">上一页</a>
+          <span class="pager-current" th:text="|第 ${photos.page} / ${photos.totalPages} 页|">第 1 / 1 页</span>
+          <a class="pager-link" th:if="${photos.hasNext()}" th:href="${photos.nextUrl}">下一页</a>
+        </nav>
+      </section>
+    </main>
+
+    <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--wide')}"></th:block>
+
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+    </nav>
+  </body>
+</html>

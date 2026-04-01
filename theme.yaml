@@ -12,11 +12,10 @@ spec:
   homepage: "https://kixyu9527.com"
   repo: "https://github.com/kkyu9527/kixyu-books.git"
   issues: "https://github.com/kkyu9527/kixyu-books/issues"
-  version: 0.7.4
+  version: 0.8.0
   requires: ">2.23.0"
   license:
     - name: "MIT"
       url: "https://github.com/kkyu9527/kixyu-books/blob/main/LICENSE"
-  # 在主题根目录新增 settings.yaml再取消下面两项注释，。
-  # settingName: "kixyu-books-setting"
-  # configMapName: "kixyu-books-configMap"
+  settingName: "kixyu-books-setting"
+  configMapName: "kixyu-books-configMap"

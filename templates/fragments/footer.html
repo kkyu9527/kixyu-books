@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <th:block th:fragment="siteFooter(className)">
+    <footer th:class="${className}">
+      <div class="footer-block">
+        <div class="footer-brand">
+          <p class="footer-title" th:text="${theme.config.footer.title ?: site.title}">Kixyu Books</p>
+          <p
+            class="footer-slogan"
+            th:if="${not #strings.isEmpty(theme.config.footer.slogan ?: site.subtitle)}"
+            th:text="${theme.config.footer.slogan ?: site.subtitle}"
+          >
+            A quiet place for reading.
+          </p>
+        </div>
+        <div class="footer-meta">
+          <halo:footer />
+          <p
+            class="footer-records"
+            th:if="${not #strings.isEmpty(theme.config.beian.icp_text) or not #strings.isEmpty(theme.config.beian.gongan_text)}"
+          >
+            <a
+              class="footer-record-link"
+              th:if="${not #strings.isEmpty(theme.config.beian.icp_text)}"
+              th:href="${theme.config.beian.icp_link}"
+              target="_blank"
+              rel="noopener noreferrer"
+              th:text="${theme.config.beian.icp_text}"
+            >
+              ICP 备案号
+            </a>
+            <span
+              th:if="${not #strings.isEmpty(theme.config.beian.icp_text) and not #strings.isEmpty(theme.config.beian.gongan_text)}"
+            >
+              ·
+            </span>
+            <a
+              class="footer-record-link"
+              th:if="${not #strings.isEmpty(theme.config.beian.gongan_text)}"
+              th:href="${theme.config.beian.gongan_link}"
+              target="_blank"
+              rel="noopener noreferrer"
+              th:text="${theme.config.beian.gongan_text}"
+            >
+              公安备案号
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
+  </th:block>
+</html>

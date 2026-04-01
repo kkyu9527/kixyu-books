@@ -10,6 +10,10 @@
   }
 
   function getStoredMode() {
+    if (root.dataset.themeToggleEnabled === "false") {
+      return root.dataset.colorSchemeMode || "system";
+    }
+
     var stored = window.localStorage.getItem(storageKey);
     if (isValidMode(stored)) {
       return stored;
@@ -60,8 +64,16 @@
     var currentLabel = getModeLabel(mode);
     var nextMode = getNextMode(mode);
     var nextLabel = getModeLabel(nextMode);
+    var toggleEnabled = root.dataset.themeToggleEnabled !== "false";
 
     toggles.forEach(function (toggle) {
+      toggle.hidden = !toggleEnabled;
+      toggle.disabled = !toggleEnabled;
+
+      if (!toggleEnabled) {
+        return;
+      }
+
       toggle.setAttribute("aria-label", "当前为" + currentLabel + "，点击切换到" + nextLabel + "模式");
       toggle.setAttribute("title", "当前为" + currentLabel + "，点击切换到" + nextLabel + "模式");
       toggle.setAttribute("data-theme-mode", mode);
@@ -75,10 +87,18 @@
   }
 
   function persistMode(mode) {
+    if (root.dataset.themeToggleEnabled === "false") {
+      return;
+    }
+
     window.localStorage.setItem(storageKey, mode);
   }
 
   function toggleMode() {
+    if (root.dataset.themeToggleEnabled === "false") {
+      return;
+    }
+
     var currentMode = root.dataset.colorSchemeMode || getStoredMode();
     var nextMode = getNextMode(currentMode);
     persistMode(nextMode);

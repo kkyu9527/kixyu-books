@@ -1,5 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+  <th:block th:fragment="themeBoot(version)">
+    <script th:inline="javascript">
+      (() => {
+        const storageKey = "kb-color-scheme-mode";
+        const fallback = /*[[${theme.config.style.color_scheme}]]*/ "system";
+        const allowToggle = /*[[${theme.config.style.enable_change_color_scheme}]]*/ true;
+        const preferredMode =
+          fallback === "light" || fallback === "dark" || fallback === "system" ? fallback : "system";
+        const stored = allowToggle ? localStorage.getItem(storageKey) : null;
+        const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : preferredMode;
+        const scheme =
+          mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
+
+        document.documentElement.dataset.colorSchemeMode = mode;
+        document.documentElement.dataset.colorScheme = scheme;
+        document.documentElement.dataset.themeToggleEnabled = allowToggle ? "true" : "false";
+      })();
+    </script>
+    <th:block th:replace="~{::themeStyles(${version})}"></th:block>
+  </th:block>
+
   <th:block th:fragment="themeStyles(version)">
     <link rel="stylesheet" th:href="@{/assets/css/base.css?v={version}(version=${version})}" />
     <link rel="stylesheet" th:href="@{/assets/css/catalog.css?v={version}(version=${version})}" />

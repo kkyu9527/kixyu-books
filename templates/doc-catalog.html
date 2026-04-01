@@ -1,0 +1,68 @@
+<th:block th:if="${theme.config.plugin.docsme.source == 'plugin'}">
+  <th:block th:replace="~{plugin:plugin-docsme:doc-catalog}" />
+</th:block>
+<th:block th:unless="${theme.config.plugin.docsme.source == 'plugin'}">
+  <!DOCTYPE html>
+  <html
+    lang="zh-CN"
+    xmlns:th="https://www.thymeleaf.org"
+    xmlns:halo="https://www.halo.run"
+  >
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+      <meta name="theme-color" content="#f4efe6" />
+      <title th:text="|文档目录 · ${site.title}|">文档目录 · Kixyu Books</title>
+      <th:block th:replace="~{fragments/assets :: themeBoot(${theme.spec.version})}"></th:block>
+      <th:block th:replace="~{plugin:plugin-docsme:modules/style}" />
+      <th:block th:replace="~{plugin:plugin-docsme:modules/script}" />
+      <th:block th:replace="~{plugin:plugin-docsme:modules/plugin-scripts}" />
+      <script
+        defer
+        th:src="@{/assets/js/theme.js?v={version}(version=${theme.spec.version})}"
+      ></script>
+    </head>
+    <body class="theme-root">
+      <header class="page-masthead page-masthead--wide">
+        <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+        <nav class="masthead-nav" aria-label="主要导航">
+          <a class="masthead-link" th:href="@{/archives}">目录</a>
+          <a class="masthead-link is-current" th:href="@{/docs}">文档</a>
+          <button
+            type="button"
+            class="search-trigger"
+            data-search-trigger
+            th:if="${pluginFinder.available('PluginSearchWidget')}"
+            aria-label="打开搜索"
+            title="搜索（Ctrl+F / Command+F）"
+          >
+            搜索
+          </button>
+          <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
+            <span class="theme-switch-mark" aria-hidden="true"></span>
+            <span class="theme-switch-text" data-theme-label>跟随系统</span>
+          </button>
+        </nav>
+      </header>
+
+      <main class="page-shell page-shell--wide" role="main">
+        <section class="catalog-page catalog-page--docs">
+          <header class="book-heading">
+            <p class="page-label">附录</p>
+            <h1 class="page-title">文档目录</h1>
+          </header>
+          <div class="docs-shell">
+            <th:block th:replace="~{plugin:plugin-docsme:modules/doc-catalog :: doc-catalog (footer = null)}" />
+          </div>
+        </section>
+      </main>
+
+      <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--wide')}"></th:block>
+
+      <nav class="quick-return" aria-label="快速返回">
+        <a class="quick-return-link" th:href="@{/}">首页</a>
+        <a class="quick-return-link" th:href="@{/archives}">目录</a>
+      </nav>
+    </body>
+  </html>
+</th:block>
