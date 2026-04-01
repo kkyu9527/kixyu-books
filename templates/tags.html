@@ -19,10 +19,7 @@
     <header class="page-masthead page-masthead--wide">
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
-        <a class="masthead-link" th:href="@{/archives}">目录</a>
-        <a class="masthead-link" th:href="@{/categories}">分类</a>
-        <a class="masthead-link is-current" th:href="@{/tags}">标签</a>
-        <a class="masthead-link" href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer">开往</a>
+        <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/tags')}" />
         <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
           <span class="theme-switch-mark" aria-hidden="true"></span>
           <span class="theme-switch-text" data-theme-label>跟随系统</span>

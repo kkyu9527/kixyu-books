@@ -27,8 +27,7 @@
       <header class="page-masthead page-masthead--wide">
         <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
         <nav class="masthead-nav" aria-label="主要导航">
-          <a class="masthead-link" th:href="@{/archives}">目录</a>
-          <a class="masthead-link is-current" th:href="@{/docs}">文档</a>
+          <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/docs')}" />
           <button
             type="button"
             class="search-trigger"

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html
+  lang="zh-CN"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:halo="https://www.halo.run"
+>
+  <th:block th:fragment="primaryMenuLinks(linkClass, currentPath)" th:with="menu=${menuFinder.getPrimary()}">
+    <th:block th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}">
+      <a
+        th:each="menuItem : ${menu.menuItems}"
+        th:with="normalizedCurrentPath=${currentPath != null ? currentPath : ''}, isCurrent=${not #strings.isEmpty(normalizedCurrentPath) and (menuItem.status.href == normalizedCurrentPath or #strings.endsWith(menuItem.status.href, normalizedCurrentPath) or #strings.endsWith(normalizedCurrentPath, menuItem.status.href) or #strings.startsWith(menuItem.status.href, normalizedCurrentPath + '/') or #strings.startsWith(normalizedCurrentPath, menuItem.status.href + '/'))}"
+        th:class="${linkClass}"
+        th:classappend="${isCurrent ? ' is-current' : ''}"
+        th:href="@{${menuItem.status.href}}"
+        th:text="${menuItem.status.displayName}"
+        th:target="${menuItem.spec.target?.value}"
+      >
+        菜单
+      </a>
+    </th:block>
+  </th:block>
+</html>
