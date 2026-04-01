@@ -5,7 +5,7 @@
   xmlns:halo="https://www.halo.run"
 >
   <th:block th:fragment="siteFooter(className)">
-    <footer th:class="${className}">
+    <footer th:if="${theme.config.footer.enable == null or theme.config.footer.enable}" th:class="${className}">
       <div class="footer-block">
         <div class="footer-brand">
           <p class="footer-title" th:text="${theme.config.footer.title ?: site.title}">Kixyu Books</p>

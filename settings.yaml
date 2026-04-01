@@ -25,6 +25,11 @@ spec:
     - group: footer
       label: 页脚
       formSchema:
+        - $formkit: checkbox
+          name: enable
+          label: 显示页脚
+          value: true
+          help: 关闭后全站不显示页脚
         - $formkit: text
           name: title
           label: 标题
