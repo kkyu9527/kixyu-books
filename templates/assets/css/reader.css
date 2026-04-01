@@ -404,9 +404,17 @@
   justify-content: center;
   min-height: 2.3rem;
   padding: 0 0.95rem;
-  border-radius: calc(var(--kb-radius-control) - 0.1rem);
   border: 1px solid transparent;
+  border-radius: calc(var(--kb-radius-control) - 0.1rem);
+  background: transparent;
   color: var(--kb-color-muted);
+  font: inherit;
   font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+}
+
+.quick-return-link--top {
+  min-width: 4.25rem;
 }
 

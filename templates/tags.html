@@ -19,11 +19,12 @@
     <header class="page-masthead page-masthead--wide">
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
-        <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/tags')}" />
-        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
-          <span class="theme-switch-mark" aria-hidden="true"></span>
-          <span class="theme-switch-text" data-theme-label>跟随系统</span>
-        </button>
+        <div class="masthead-nav-links">
+          <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/tags')}" />
+        </div>
+        <div class="masthead-actions">
+          <th:block th:replace="~{fragments/navigation :: headerUtilities(false, true)}" />
+        </div>
       </nav>
     </header>
 

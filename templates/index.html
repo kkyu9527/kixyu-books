@@ -19,10 +19,7 @@
     <main class="cover-page" role="main">
       <section class="cover-card">
         <div class="cover-tools">
-          <button type="button" class="theme-switch" data-theme-toggle aria-label="切换颜色模式">
-            <span class="theme-switch-mark" aria-hidden="true"></span>
-            <span class="theme-switch-text" data-theme-label>跟随系统</span>
-          </button>
+          <th:block th:replace="~{fragments/navigation :: headerUtilities(false, false)}" />
         </div>
         <div class="cover-copy">
           <!-- 封面页角标文案；如果你后续想换成“序章”“卷首”等，可直接修改这里。 -->

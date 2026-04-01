@@ -33,6 +33,24 @@
     justify-content: flex-end;
   }
 
+  .masthead-nav {
+    gap: 0.8rem;
+  }
+
+  .masthead-nav-links,
+  .masthead-actions,
+  .cover-tools {
+    gap: 0.65rem;
+  }
+
+  .masthead-actions {
+    justify-content: flex-end;
+  }
+
+  .account-menu-label {
+    max-width: 5.5rem;
+  }
+
   .cover-copy {
     padding: 1.25rem 0 1.75rem;
   }
@@ -234,7 +252,15 @@
     right: 0.75rem;
     left: 0.75rem;
     bottom: 0.75rem;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  .quick-return-link {
+    width: 100%;
+    min-width: 0;
+    padding: 0 0.65rem;
   }
 
   .theme-switch {

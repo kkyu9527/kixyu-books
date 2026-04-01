@@ -114,6 +114,27 @@
     return false;
   }
 
+  function shouldReduceMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function scrollPageToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: shouldReduceMotion() ? "auto" : "smooth",
+    });
+  }
+
+  function closeAccountMenus(currentMenu) {
+    var menus = document.querySelectorAll(".account-menu[open]");
+
+    menus.forEach(function (menu) {
+      if (!currentMenu || menu !== currentMenu) {
+        menu.removeAttribute("open");
+      }
+    });
+  }
+
   function isEditableTarget(target) {
     if (!target) {
       return false;
@@ -188,6 +209,18 @@
   }
 
   document.addEventListener("click", function (event) {
+    var accountMenu = event.target.closest(".account-menu");
+    if (!accountMenu) {
+      closeAccountMenus();
+    }
+
+    var scrollTopTrigger = event.target.closest("[data-scroll-top]");
+    if (scrollTopTrigger) {
+      event.preventDefault();
+      scrollPageToTop();
+      return;
+    }
+
     var searchTrigger = event.target.closest("[data-search-trigger]");
     if (searchTrigger) {
       if (openSearchWidget()) {
@@ -206,6 +239,10 @@
   });
 
   document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeAccountMenus();
+    }
+
     var isSearchShortcut =
       !event.altKey &&
       !event.shiftKey &&

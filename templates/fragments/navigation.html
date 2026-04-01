@@ -3,6 +3,7 @@
   lang="zh-CN"
   xmlns:th="https://www.thymeleaf.org"
   xmlns:halo="https://www.halo.run"
+  xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
 >
   <th:block th:fragment="primaryMenuLinks(linkClass, currentPath)" th:with="menu=${menuFinder.getPrimary()}">
     <th:block th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}">
@@ -18,5 +19,89 @@
         菜单
       </a>
     </th:block>
+  </th:block>
+
+  <th:block th:fragment="headerUtilities(includeSearch, compactTheme)">
+    <button
+      type="button"
+      class="search-trigger"
+      data-search-trigger
+      th:if="${includeSearch and pluginFinder.available('PluginSearchWidget')}"
+      aria-label="打开搜索"
+      title="搜索（Ctrl+F / Command+F）"
+    >
+      搜索
+    </button>
+
+    <details
+      class="account-menu"
+      th:with="currentUserName=${#authentication != null ? #authentication.name : ''}, currentUser=${#strings.isEmpty(currentUserName) or currentUserName == 'anonymousUser' ? null : contributorFinder.getContributor(currentUserName)}"
+    >
+      <summary class="account-menu-trigger">
+        <span class="account-menu-avatar-shell" aria-hidden="true">
+          <img
+            class="account-menu-image"
+            th:if="${currentUser != null and not #strings.isEmpty(currentUser.avatar)}"
+            th:src="${currentUser.avatar}"
+            th:alt="${currentUser.displayName}"
+          />
+          <span
+            class="account-menu-avatar"
+            th:unless="${currentUser != null and not #strings.isEmpty(currentUser.avatar)}"
+            th:text="${currentUser != null and not #strings.isEmpty(currentUser.displayName) ? #strings.substring(currentUser.displayName, 0, 1) : '入'}"
+          >
+            入
+          </span>
+        </span>
+        <span
+          class="account-menu-label"
+          sec:authorize="isAuthenticated()"
+          th:text="${currentUser != null and not #strings.isEmpty(currentUser.displayName) ? currentUser.displayName : '账户'}"
+        >
+          账户
+        </span>
+        <span class="account-menu-label" sec:authorize="isAnonymous()">登录</span>
+      </summary>
+
+      <div class="account-menu-panel" role="menu">
+        <a
+          sec:authorize="isAuthenticated()"
+          class="account-menu-link"
+          href="/console"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          后台
+        </a>
+        <a sec:authorize="isAuthenticated()" class="account-menu-link" href="/logout">退出</a>
+        <a
+          sec:authorize="isAnonymous()"
+          class="account-menu-link"
+          href="/login"
+          onclick="this.href = '/login?redirect_uri=' + encodeURIComponent(window.location.href)"
+        >
+          登录
+        </a>
+      </div>
+    </details>
+
+    <button
+      type="button"
+      class="theme-switch"
+      th:classappend="${compactTheme ? ' theme-switch--compact' : ''}"
+      data-theme-toggle
+      aria-label="切换颜色模式"
+    >
+      <span class="theme-switch-mark" aria-hidden="true"></span>
+      <span class="theme-switch-text" data-theme-label>跟随系统</span>
+    </button>
+  </th:block>
+
+  <th:block th:fragment="quickReturn">
+    <nav class="quick-return" aria-label="快速返回">
+      <a class="quick-return-link" th:href="@{/}">首页</a>
+      <a class="quick-return-link" th:href="@{/archives}">目录</a>
+      <button type="button" class="quick-return-link quick-return-link--top" data-scroll-top>顶部</button>
+    </nav>
   </th:block>
 </html>

@@ -23,11 +23,12 @@
     <header class="page-masthead page-masthead--reader">
       <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
       <nav class="masthead-nav" aria-label="主要导航">
-        <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '')}" />
-        <button type="button" class="theme-switch theme-switch--compact" data-theme-toggle aria-label="切换颜色模式">
-          <span class="theme-switch-mark" aria-hidden="true"></span>
-          <span class="theme-switch-text" data-theme-label>跟随系统</span>
-        </button>
+        <div class="masthead-nav-links">
+          <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '')}" />
+        </div>
+        <div class="masthead-actions">
+          <th:block th:replace="~{fragments/navigation :: headerUtilities(false, true)}" />
+        </div>
       </nav>
     </header>
 
@@ -123,10 +124,7 @@
 
     <th:block th:replace="~{fragments/footer :: siteFooter('site-footer site-footer--reader')}"></th:block>
 
-    <nav class="quick-return" aria-label="快速返回">
-      <a class="quick-return-link" th:href="@{/}">首页</a>
-      <a class="quick-return-link" th:href="@{/archives}">目录</a>
-    </nav>
+    <th:block th:replace="~{fragments/navigation :: quickReturn}" />
 
     <div class="image-lightbox" data-reader-lightbox hidden aria-hidden="true">
       <button type="button" class="image-lightbox-close" data-reader-lightbox-close aria-label="关闭全屏图片">
