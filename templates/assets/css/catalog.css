@@ -446,9 +446,20 @@ html[data-color-scheme="dark"] .pager-center {
   align-items: start;
 }
 
+.post-layout.post-layout--no-outline {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "article";
+}
+
 .post-layout > .post-article {
   grid-area: article;
   min-width: 0;
+}
+
+.post-layout.post-layout--no-outline > .post-article {
+  width: 100%;
+  max-width: var(--kb-page-width);
+  justify-self: center;
 }
 
 .post-sidebar {
@@ -457,6 +468,10 @@ html[data-color-scheme="dark"] .pager-center {
   align-self: start;
   position: sticky;
   top: 1.5rem;
+}
+
+.post-layout.post-layout--no-outline > .post-sidebar {
+  display: none;
 }
 
 .post-mobile-outline-bar {

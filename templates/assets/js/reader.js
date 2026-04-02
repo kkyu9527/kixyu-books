@@ -14,16 +14,26 @@
   function initOutline(contentRoot, behavior) {
     const outline = document.querySelector("[data-reader-outline]");
     const outlineBody = document.querySelector("[data-reader-outline-body]");
+    const layout = document.querySelector(".post-layout");
 
     if (!outline || !outlineBody) {
       return;
     }
+
+    const syncLayout = function (hasOutline) {
+      if (!layout) {
+        return;
+      }
+
+      layout.classList.toggle("post-layout--no-outline", !hasOutline);
+    };
 
     const mobileOutline = bindMobileOutline(outline);
 
     const headings = Array.from(contentRoot.querySelectorAll("h1, h2, h3, h4, h5, h6"));
 
     if (!headings.length) {
+      syncLayout(false);
       outline.hidden = true;
       mobileOutline.setAvailable(false);
       return;
@@ -32,11 +42,13 @@
     const groups = buildGroups(headings);
 
     if (!groups.length) {
+      syncLayout(false);
       outline.hidden = true;
       mobileOutline.setAvailable(false);
       return;
     }
 
+    syncLayout(true);
     outline.hidden = false;
     mobileOutline.setAvailable(true);
     renderOutline(groups, outlineBody, behavior, mobileOutline);
