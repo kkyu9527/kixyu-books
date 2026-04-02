@@ -39,6 +39,370 @@ spec:
           name: custom_font
           label: 字体文件地址
           help: 支持 woff2、woff、ttf、eot、svg，建议优先使用 woff2。
+        - $formkit: toggle
+          id: enable_custom_colors_toggle
+          name: enable_custom_colors
+          label: 配色模式
+          value: false
+          renderType: text
+          help: 选择“恢复默认”会立即回到当前主题内置颜色，不需要手动清空下面的字段。
+          options:
+            - label: 恢复默认
+              value: false
+              render: 恢复默认
+            - label: 自定义配色
+              value: true
+              render: 自定义配色
+        - $formkit: toggle
+          id: palette_editor_scheme_toggle
+          if: "$get(enable_custom_colors_toggle).value === true"
+          name: palette_editor_scheme
+          label: 当前编辑
+          value: light
+          renderType: text
+          help: 为了避免配置项过长，这里一次只显示浅色或深色中的一组颜色。
+          options:
+            - label: 浅色模式
+              value: light
+              render: 浅色
+            - label: 深色模式
+              value: dark
+              render: 深色
+        - $formkit: group
+          if: "$get(enable_custom_colors_toggle).value === true"
+          name: custom_palette
+          label: 配色编辑器
+          children:
+            - $formkit: group
+              if: "$get(palette_editor_scheme_toggle).value === 'light'"
+              name: light
+              label: 浅色模式
+              children:
+                - $formkit: group
+                  name: surface
+                  label: 背景与层次
+                  children:
+                    - $formkit: color
+                      name: site_background_picker
+                      label: 网站背景
+                    - $formkit: text
+                      name: site_background_value
+                      label: 网站背景 CSS 值
+                      placeholder: 例如 #f4efe6、rgb(244, 239, 230) 或 rgba(255, 251, 245, 0.82)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: page_background_picker
+                      label: 页面卡片背景
+                    - $formkit: text
+                      name: page_background_value
+                      label: 页面卡片背景 CSS 值
+                      placeholder: 例如 #f4efe6、rgb(244, 239, 230) 或 rgba(255, 251, 245, 0.82)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: article_background_picker
+                      label: 文章页背景
+                    - $formkit: text
+                      name: article_background_value
+                      label: 文章页背景 CSS 值
+                      placeholder: 例如 #f4efe6、rgb(244, 239, 230) 或 rgba(255, 251, 245, 0.82)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: panel_background_picker
+                      label: 强层级面板背景
+                    - $formkit: text
+                      name: panel_background_value
+                      label: 强层级面板 CSS 值
+                      placeholder: 例如 #f4efe6、rgb(244, 239, 230) 或 rgba(255, 251, 245, 0.92)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: control_background_picker
+                      label: 控件背景
+                    - $formkit: text
+                      name: control_background_value
+                      label: 控件背景 CSS 值
+                      placeholder: 例如 #ffffff、rgb(255, 255, 255) 或 rgba(255, 255, 255, 0.52)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: control_hover_background_picker
+                      label: 控件悬浮背景
+                    - $formkit: text
+                      name: control_hover_background_value
+                      label: 控件悬浮背景 CSS 值
+                      placeholder: 例如 #ffffff、rgb(255, 255, 255) 或 rgba(255, 255, 255, 0.82)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: float_background_picker
+                      label: 浮层背景
+                    - $formkit: text
+                      name: float_background_value
+                      label: 浮层背景 CSS 值
+                      placeholder: 例如 #f4efe6、rgb(244, 239, 230) 或 rgba(255, 251, 245, 0.80)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: float_hover_background_picker
+                      label: 浮层悬浮背景
+                    - $formkit: text
+                      name: float_hover_background_value
+                      label: 浮层悬浮背景 CSS 值
+                      placeholder: 例如 #ffffff、rgb(255, 255, 255) 或 rgba(255, 255, 255, 0.90)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_picker
+                      label: 强调色
+                    - $formkit: text
+                      name: accent_value
+                      label: 强调色 CSS 值
+                      placeholder: 例如 #2f2418 或 rgb(47, 36, 24)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_contrast_picker
+                      label: 强调色文字颜色
+                    - $formkit: text
+                      name: accent_contrast_value
+                      label: 强调色文字 CSS 值
+                      placeholder: 例如 #f8f2e8 或 rgb(248, 242, 232)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_soft_picker
+                      label: 弱强调背景
+                    - $formkit: text
+                      name: accent_soft_value
+                      label: 弱强调背景 CSS 值
+                      placeholder: 例如 rgba(47, 36, 24, 0.08)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: border_picker
+                      label: 边框颜色
+                    - $formkit: text
+                      name: border_value
+                      label: 边框颜色 CSS 值
+                      placeholder: 例如 rgba(61, 48, 34, 0.14)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: overlay_picker
+                      label: 遮罩背景
+                    - $formkit: text
+                      name: overlay_value
+                      label: 遮罩背景 CSS 值
+                      placeholder: 例如 rgba(19, 14, 10, 0.30)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                - $formkit: group
+                  name: text
+                  label: 文字颜色
+                  children:
+                    - $formkit: color
+                      name: primary_text_picker
+                      label: 主文字颜色
+                    - $formkit: text
+                      name: primary_text_value
+                      label: 主文字 CSS 值
+                      placeholder: 例如 #221c15 或 rgb(34, 28, 21)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: secondary_text_picker
+                      label: 次级文字颜色
+                    - $formkit: text
+                      name: secondary_text_value
+                      label: 次级文字 CSS 值
+                      placeholder: 例如 #6b6258 或 rgb(107, 98, 88)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: body_text_picker
+                      label: 正文颜色
+                    - $formkit: text
+                      name: body_text_value
+                      label: 正文 CSS 值
+                      placeholder: 例如 #221c15 或 rgb(34, 28, 21)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: heading_text_picker
+                      label: 多级标题颜色
+                    - $formkit: text
+                      name: heading_text_value
+                      label: 多级标题 CSS 值
+                      placeholder: 例如 #221c15 或 rgb(34, 28, 21)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: list_text_picker
+                      label: 列表颜色
+                    - $formkit: text
+                      name: list_text_value
+                      label: 列表 CSS 值
+                      placeholder: 例如 #221c15 或 rgb(34, 28, 21)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: strong_text_picker
+                      label: 加粗文字颜色
+                    - $formkit: text
+                      name: strong_text_value
+                      label: 加粗文字 CSS 值
+                      placeholder: 例如 #221c15 或 rgb(34, 28, 21)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+            - $formkit: group
+              if: "$get(palette_editor_scheme_toggle).value === 'dark'"
+              name: dark
+              label: 深色模式
+              children:
+                - $formkit: group
+                  name: surface
+                  label: 背景与层次
+                  children:
+                    - $formkit: color
+                      name: site_background_picker
+                      label: 网站背景
+                    - $formkit: text
+                      name: site_background_value
+                      label: 网站背景 CSS 值
+                      placeholder: 例如 #15110d、rgb(21, 17, 13) 或 rgba(31, 24, 20, 0.94)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: page_background_picker
+                      label: 页面卡片背景
+                    - $formkit: text
+                      name: page_background_value
+                      label: 页面卡片背景 CSS 值
+                      placeholder: 例如 #15110d、rgb(21, 17, 13) 或 rgba(28, 22, 18, 0.84)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: article_background_picker
+                      label: 文章页背景
+                    - $formkit: text
+                      name: article_background_value
+                      label: 文章页背景 CSS 值
+                      placeholder: 例如 #15110d、rgb(21, 17, 13) 或 rgba(28, 22, 18, 0.84)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: panel_background_picker
+                      label: 强层级面板背景
+                    - $formkit: text
+                      name: panel_background_value
+                      label: 强层级面板 CSS 值
+                      placeholder: 例如 #1f1814、rgb(31, 24, 20) 或 rgba(31, 24, 20, 0.94)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: control_background_picker
+                      label: 控件背景
+                    - $formkit: text
+                      name: control_background_value
+                      label: 控件背景 CSS 值
+                      placeholder: 例如 rgba(255, 248, 238, 0.08)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: control_hover_background_picker
+                      label: 控件悬浮背景
+                    - $formkit: text
+                      name: control_hover_background_value
+                      label: 控件悬浮背景 CSS 值
+                      placeholder: 例如 rgba(255, 248, 238, 0.14)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: float_background_picker
+                      label: 浮层背景
+                    - $formkit: text
+                      name: float_background_value
+                      label: 浮层背景 CSS 值
+                      placeholder: 例如 rgba(31, 24, 20, 0.88)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: float_hover_background_picker
+                      label: 浮层悬浮背景
+                    - $formkit: text
+                      name: float_hover_background_value
+                      label: 浮层悬浮背景 CSS 值
+                      placeholder: 例如 rgba(41, 31, 25, 0.94)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_picker
+                      label: 强调色
+                    - $formkit: text
+                      name: accent_value
+                      label: 强调色 CSS 值
+                      placeholder: 例如 #efe3d0 或 rgb(239, 227, 208)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_contrast_picker
+                      label: 强调色文字颜色
+                    - $formkit: text
+                      name: accent_contrast_value
+                      label: 强调色文字 CSS 值
+                      placeholder: 例如 #1d1510 或 rgb(29, 21, 16)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: accent_soft_picker
+                      label: 弱强调背景
+                    - $formkit: text
+                      name: accent_soft_value
+                      label: 弱强调背景 CSS 值
+                      placeholder: 例如 rgba(239, 227, 208, 0.08)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: border_picker
+                      label: 边框颜色
+                    - $formkit: text
+                      name: border_value
+                      label: 边框颜色 CSS 值
+                      placeholder: 例如 rgba(243, 235, 223, 0.12)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: overlay_picker
+                      label: 遮罩背景
+                    - $formkit: text
+                      name: overlay_value
+                      label: 遮罩背景 CSS 值
+                      placeholder: 例如 rgba(8, 6, 4, 0.52)
+                      help: 支持透明色与 rgba()，填写时优先于上方色盘。
+                - $formkit: group
+                  name: text
+                  label: 文字颜色
+                  children:
+                    - $formkit: color
+                      name: primary_text_picker
+                      label: 主文字颜色
+                    - $formkit: text
+                      name: primary_text_value
+                      label: 主文字 CSS 值
+                      placeholder: 例如 #f3ebdf 或 rgb(243, 235, 223)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: secondary_text_picker
+                      label: 次级文字颜色
+                    - $formkit: text
+                      name: secondary_text_value
+                      label: 次级文字 CSS 值
+                      placeholder: 例如 #b8ab99 或 rgb(184, 171, 153)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: body_text_picker
+                      label: 正文颜色
+                    - $formkit: text
+                      name: body_text_value
+                      label: 正文 CSS 值
+                      placeholder: 例如 #f3ebdf 或 rgb(243, 235, 223)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: heading_text_picker
+                      label: 多级标题颜色
+                    - $formkit: text
+                      name: heading_text_value
+                      label: 多级标题 CSS 值
+                      placeholder: 例如 #f3ebdf 或 rgb(243, 235, 223)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: list_text_picker
+                      label: 列表颜色
+                    - $formkit: text
+                      name: list_text_value
+                      label: 列表 CSS 值
+                      placeholder: 例如 #f3ebdf 或 rgb(243, 235, 223)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
+                    - $formkit: color
+                      name: strong_text_picker
+                      label: 加粗文字颜色
+                    - $formkit: text
+                      name: strong_text_value
+                      label: 加粗文字 CSS 值
+                      placeholder: 例如 #f3ebdf 或 rgb(243, 235, 223)
+                      help: 支持 #111111、rgb()、rgba() 等格式，填写时优先于上方色盘。
     - group: cover
       label: 扉页与卷首
       formSchema:

@@ -12,7 +12,7 @@ spec:
   homepage: "https://kixyu9527.com"
   repo: "https://github.com/kkyu9527/kixyu-books.git"
   issues: "https://github.com/kkyu9527/kixyu-books/issues"
-  version: 0.12.6
+  version: 0.13.2
   requires: ">2.23.0"
   license:
     - name: "MIT"

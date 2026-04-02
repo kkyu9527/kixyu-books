@@ -1,20 +1,25 @@
 :root {
-  --kb-color-bg: #f4efe6;
-  --kb-color-surface: rgba(255, 251, 245, 0.82);
-  --kb-color-surface-strong: rgba(255, 251, 245, 0.92);
-  --kb-color-text: #221c15;
-  --kb-color-muted: #6b6258;
-  --kb-color-border: rgba(61, 48, 34, 0.14);
-  --kb-color-accent: #2f2418;
-  --kb-color-accent-contrast: #f8f2e8;
-  --kb-color-accent-soft: rgba(47, 36, 24, 0.08);
-  --kb-color-control-bg: rgba(255, 255, 255, 0.52);
-  --kb-color-control-bg-hover: rgba(255, 255, 255, 0.82);
-  --kb-color-control-bg-active: rgba(255, 255, 255, 0.92);
-  --kb-color-float-bg: rgba(255, 251, 245, 0.8);
-  --kb-color-float-bg-hover: rgba(255, 255, 255, 0.9);
-  --kb-color-outline-rail: rgba(61, 48, 34, 0.1);
-  --kb-color-overlay: rgba(19, 14, 10, 0.3);
+  --kb-color-bg: var(--kb-custom-light-site-background, #f4efe6);
+  --kb-color-surface: var(--kb-custom-light-page-background, rgba(255, 251, 245, 0.82));
+  --kb-color-post-surface: var(--kb-custom-light-article-background, var(--kb-color-surface));
+  --kb-color-surface-strong: var(--kb-custom-light-panel-background, rgba(255, 251, 245, 0.92));
+  --kb-color-text: var(--kb-custom-light-primary-text, #221c15);
+  --kb-color-muted: var(--kb-custom-light-secondary-text, #6b6258);
+  --kb-color-body-text: var(--kb-custom-light-body-text, var(--kb-color-text));
+  --kb-color-heading-text: var(--kb-custom-light-heading-text, var(--kb-color-text));
+  --kb-color-list-text: var(--kb-custom-light-list-text, var(--kb-color-body-text));
+  --kb-color-strong-text: var(--kb-custom-light-strong-text, var(--kb-color-heading-text));
+  --kb-color-border: var(--kb-custom-light-border, rgba(61, 48, 34, 0.14));
+  --kb-color-accent: var(--kb-custom-light-accent, #2f2418);
+  --kb-color-accent-contrast: var(--kb-custom-light-accent-contrast, #f8f2e8);
+  --kb-color-accent-soft: var(--kb-custom-light-accent-soft, rgba(47, 36, 24, 0.08));
+  --kb-color-control-bg: var(--kb-custom-light-control-background, rgba(255, 255, 255, 0.52));
+  --kb-color-control-bg-hover: var(--kb-custom-light-control-hover-background, rgba(255, 255, 255, 0.82));
+  --kb-color-control-bg-active: var(--kb-custom-light-control-hover-background, rgba(255, 255, 255, 0.92));
+  --kb-color-float-bg: var(--kb-custom-light-float-background, rgba(255, 251, 245, 0.8));
+  --kb-color-float-bg-hover: var(--kb-custom-light-float-hover-background, rgba(255, 255, 255, 0.9));
+  --kb-color-outline-rail: var(--kb-custom-light-border, rgba(61, 48, 34, 0.1));
+  --kb-color-overlay: var(--kb-custom-light-overlay, rgba(19, 14, 10, 0.3));
   --kb-page-width: 52rem;
   --kb-page-gutter: 1.5rem;
   --kb-wide-width: 72rem;
@@ -32,22 +37,27 @@
 }
 
 html[data-color-scheme="dark"] {
-  --kb-color-bg: #15110d;
-  --kb-color-surface: rgba(28, 22, 18, 0.84);
-  --kb-color-surface-strong: rgba(31, 24, 20, 0.94);
-  --kb-color-text: #f3ebdf;
-  --kb-color-muted: #b8ab99;
-  --kb-color-border: rgba(243, 235, 223, 0.12);
-  --kb-color-accent: #efe3d0;
-  --kb-color-accent-contrast: #1d1510;
-  --kb-color-accent-soft: rgba(239, 227, 208, 0.08);
-  --kb-color-control-bg: rgba(255, 248, 238, 0.08);
-  --kb-color-control-bg-hover: rgba(255, 248, 238, 0.14);
-  --kb-color-control-bg-active: rgba(255, 248, 238, 0.18);
-  --kb-color-float-bg: rgba(31, 24, 20, 0.88);
-  --kb-color-float-bg-hover: rgba(41, 31, 25, 0.94);
-  --kb-color-outline-rail: rgba(243, 235, 223, 0.14);
-  --kb-color-overlay: rgba(8, 6, 4, 0.52);
+  --kb-color-bg: var(--kb-custom-dark-site-background, #15110d);
+  --kb-color-surface: var(--kb-custom-dark-page-background, rgba(28, 22, 18, 0.84));
+  --kb-color-post-surface: var(--kb-custom-dark-article-background, var(--kb-color-surface));
+  --kb-color-surface-strong: var(--kb-custom-dark-panel-background, rgba(31, 24, 20, 0.94));
+  --kb-color-text: var(--kb-custom-dark-primary-text, #f3ebdf);
+  --kb-color-muted: var(--kb-custom-dark-secondary-text, #b8ab99);
+  --kb-color-body-text: var(--kb-custom-dark-body-text, var(--kb-color-text));
+  --kb-color-heading-text: var(--kb-custom-dark-heading-text, var(--kb-color-text));
+  --kb-color-list-text: var(--kb-custom-dark-list-text, var(--kb-color-body-text));
+  --kb-color-strong-text: var(--kb-custom-dark-strong-text, var(--kb-color-heading-text));
+  --kb-color-border: var(--kb-custom-dark-border, rgba(243, 235, 223, 0.12));
+  --kb-color-accent: var(--kb-custom-dark-accent, #efe3d0);
+  --kb-color-accent-contrast: var(--kb-custom-dark-accent-contrast, #1d1510);
+  --kb-color-accent-soft: var(--kb-custom-dark-accent-soft, rgba(239, 227, 208, 0.08));
+  --kb-color-control-bg: var(--kb-custom-dark-control-background, rgba(255, 248, 238, 0.08));
+  --kb-color-control-bg-hover: var(--kb-custom-dark-control-hover-background, rgba(255, 248, 238, 0.14));
+  --kb-color-control-bg-active: var(--kb-custom-dark-control-hover-background, rgba(255, 248, 238, 0.18));
+  --kb-color-float-bg: var(--kb-custom-dark-float-background, rgba(31, 24, 20, 0.88));
+  --kb-color-float-bg-hover: var(--kb-custom-dark-float-hover-background, rgba(41, 31, 25, 0.94));
+  --kb-color-outline-rail: var(--kb-custom-dark-border, rgba(243, 235, 223, 0.14));
+  --kb-color-overlay: var(--kb-custom-dark-overlay, rgba(8, 6, 4, 0.52));
   --kb-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
 }
 
@@ -152,6 +162,10 @@ a {
     border-color var(--kb-motion-base),
     box-shadow var(--kb-motion-base),
     transform var(--kb-motion-fast);
+}
+
+.post-article {
+  background: var(--kb-color-post-surface);
 }
 
 .cover-card::before,

@@ -72,13 +72,17 @@
 
   function applyMode(mode) {
     var scheme = getResolvedScheme(mode);
+    var themeColor =
+      scheme === "dark"
+        ? root.dataset.themeColorDark || "#13100c"
+        : root.dataset.themeColorLight || "#f4efe6";
 
     root.dataset.colorSchemeMode = mode;
     root.dataset.colorScheme = scheme;
     var meta = document.querySelector('meta[name="theme-color"]');
 
     if (meta) {
-      meta.setAttribute("content", scheme === "dark" ? "#13100c" : "#f4efe6");
+      meta.setAttribute("content", themeColor);
     }
 
     syncToggle(mode, scheme);

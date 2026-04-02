@@ -3,21 +3,167 @@
   <th:block th:fragment="themeBoot(version)">
     <script th:inline="javascript">
       (() => {
+        const root = document.documentElement;
         const storageKey = "kb-color-scheme-mode";
         const fallback = /*[[${theme.config.style.color_scheme}]]*/ "system";
         const allowToggle = /*[[${theme.config.style.enable_change_color_scheme}]]*/ true;
+        const enableCustomColors = /*[[${theme.config.style.enable_custom_colors}]]*/ false;
+        const customPalette = /*[[${theme.config.style.custom_palette}]]*/ null;
         const preferredMode =
           fallback === "light" || fallback === "dark" || fallback === "system" ? fallback : "system";
         const stored = allowToggle ? localStorage.getItem(storageKey) : null;
         const mode = stored === "light" || stored === "dark" || stored === "system" ? stored : preferredMode;
+        const variableMap = {
+          surface: {
+            site_background: "--kb-custom-%s-site-background",
+            page_background: "--kb-custom-%s-page-background",
+            article_background: "--kb-custom-%s-article-background",
+            panel_background: "--kb-custom-%s-panel-background",
+            control_background: "--kb-custom-%s-control-background",
+            control_hover_background: "--kb-custom-%s-control-hover-background",
+            float_background: "--kb-custom-%s-float-background",
+            float_hover_background: "--kb-custom-%s-float-hover-background",
+            accent: "--kb-custom-%s-accent",
+            accent_contrast: "--kb-custom-%s-accent-contrast",
+            accent_soft: "--kb-custom-%s-accent-soft",
+            border: "--kb-custom-%s-border",
+            overlay: "--kb-custom-%s-overlay",
+          },
+          text: {
+            primary_text: "--kb-custom-%s-primary-text",
+            secondary_text: "--kb-custom-%s-secondary-text",
+            body_text: "--kb-custom-%s-body-text",
+            heading_text: "--kb-custom-%s-heading-text",
+            list_text: "--kb-custom-%s-list-text",
+            strong_text: "--kb-custom-%s-strong-text",
+          },
+        };
+        const defaults = {
+          light: {
+            surface: {
+              site_background: "#f4efe6",
+              page_background: "rgba(255, 251, 245, 0.82)",
+              article_background: "rgba(255, 251, 245, 0.82)",
+              panel_background: "rgba(255, 251, 245, 0.92)",
+              control_background: "rgba(255, 255, 255, 0.52)",
+              control_hover_background: "rgba(255, 255, 255, 0.82)",
+              float_background: "rgba(255, 251, 245, 0.8)",
+              float_hover_background: "rgba(255, 255, 255, 0.9)",
+              accent: "#2f2418",
+              accent_contrast: "#f8f2e8",
+              accent_soft: "rgba(47, 36, 24, 0.08)",
+              border: "rgba(61, 48, 34, 0.14)",
+              overlay: "rgba(19, 14, 10, 0.3)",
+            },
+            text: {
+              primary_text: "#221c15",
+              secondary_text: "#6b6258",
+              body_text: "#221c15",
+              heading_text: "#221c15",
+              list_text: "#221c15",
+              strong_text: "#221c15",
+            },
+          },
+          dark: {
+            surface: {
+              site_background: "#15110d",
+              page_background: "rgba(28, 22, 18, 0.84)",
+              article_background: "rgba(28, 22, 18, 0.84)",
+              panel_background: "rgba(31, 24, 20, 0.94)",
+              control_background: "rgba(255, 248, 238, 0.08)",
+              control_hover_background: "rgba(255, 248, 238, 0.14)",
+              float_background: "rgba(31, 24, 20, 0.88)",
+              float_hover_background: "rgba(41, 31, 25, 0.94)",
+              accent: "#efe3d0",
+              accent_contrast: "#1d1510",
+              accent_soft: "rgba(239, 227, 208, 0.08)",
+              border: "rgba(243, 235, 223, 0.12)",
+              overlay: "rgba(8, 6, 4, 0.52)",
+            },
+            text: {
+              primary_text: "#f3ebdf",
+              secondary_text: "#b8ab99",
+              body_text: "#f3ebdf",
+              heading_text: "#f3ebdf",
+              list_text: "#f3ebdf",
+              strong_text: "#f3ebdf",
+            },
+          },
+        };
+
+        const normalizeColor = (value) => (typeof value === "string" ? value.trim() : "");
+        const supportsColor = (value) => {
+          const normalized = normalizeColor(value);
+
+          if (!normalized) {
+            return false;
+          }
+
+          if (window.CSS && typeof window.CSS.supports === "function") {
+            return window.CSS.supports("color", normalized);
+          }
+
+          return (
+            /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(normalized) ||
+            /^(rgb|rgba|hsl|hsla)\(/i.test(normalized) ||
+            /^(transparent|currentcolor)$/i.test(normalized)
+          );
+        };
+        const getFieldValue = (scheme, section, key, suffix) => {
+          if (!enableCustomColors || !customPalette || !customPalette[scheme]) {
+            return "";
+          }
+
+          const branch = customPalette[scheme][section];
+
+          if (!branch) {
+            return "";
+          }
+
+          return normalizeColor(branch[key + suffix]);
+        };
+        const resolveValue = (scheme, section, key) => {
+          const manual = getFieldValue(scheme, section, key, "_value");
+          if (supportsColor(manual)) {
+            return manual;
+          }
+
+          const picker = getFieldValue(scheme, section, key, "_picker");
+          if (supportsColor(picker)) {
+            return picker;
+          }
+
+          return defaults[scheme][section][key];
+        };
+        const applyPalette = (scheme) => {
+          Object.keys(variableMap).forEach((section) => {
+            Object.keys(variableMap[section]).forEach((key) => {
+              const variableName = variableMap[section][key].replace("%s", scheme);
+              root.style.setProperty(variableName, resolveValue(scheme, section, key));
+            });
+          });
+        };
+
+        applyPalette("light");
+        applyPalette("dark");
+
         const scheme =
           mode === "system"
             ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
             : mode;
+        const lightThemeColor = resolveValue("light", "surface", "site_background");
+        const darkThemeColor = resolveValue("dark", "surface", "site_background");
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
-        document.documentElement.dataset.colorSchemeMode = mode;
-        document.documentElement.dataset.colorScheme = scheme;
-        document.documentElement.dataset.themeToggleEnabled = allowToggle ? "true" : "false";
+        root.dataset.colorSchemeMode = mode;
+        root.dataset.colorScheme = scheme;
+        root.dataset.themeToggleEnabled = allowToggle ? "true" : "false";
+        root.dataset.themeColorLight = lightThemeColor;
+        root.dataset.themeColorDark = darkThemeColor;
+
+        if (metaThemeColor) {
+          metaThemeColor.setAttribute("content", scheme === "dark" ? darkThemeColor : lightThemeColor);
+        }
       })();
     </script>
     <th:block th:replace="~{::themeStyles(${version})}"></th:block>

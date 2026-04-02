@@ -150,6 +150,7 @@
 
 .post-content {
   font-size: 1.03rem;
+  color: var(--kb-color-body-text);
 }
 
 .post-content > :first-child {
@@ -177,12 +178,19 @@
 .post-content h5,
 .post-content h6 {
   margin: 2.6rem 0 0.9rem;
+  color: var(--kb-color-heading-text);
   line-height: 1.35;
 }
 
 .post-content ul,
 .post-content ol {
   padding-left: 1.4rem;
+  color: var(--kb-color-list-text);
+}
+
+.post-content li,
+.post-content li::marker {
+  color: var(--kb-color-list-text);
 }
 
 .post-content li + li {
@@ -204,6 +212,11 @@
 
 .post-content a:hover {
   text-decoration-color: currentColor;
+}
+
+.post-content strong,
+.post-content b {
+  color: var(--kb-color-strong-text);
 }
 
 .post-content code,
