@@ -17,7 +17,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/photos')}" />
@@ -70,11 +70,7 @@
           </figure>
         </div>
 
-        <nav class="pager" th:if="${photos.hasPrevious() or photos.hasNext()}">
-          <a class="pager-link" th:if="${photos.hasPrevious()}" th:href="${photos.prevUrl}">上一页</a>
-          <span class="pager-current" th:text="|第 ${photos.page} / ${photos.totalPages} 页|">第 1 / 1 页</span>
-          <a class="pager-link" th:if="${photos.hasNext()}" th:href="${photos.nextUrl}">下一页</a>
-        </nav>
+        <th:block th:replace="~{fragments/pagination :: bookPager(data=${photos}, ariaLabel='图库分页导航')}" />
       </section>
     </main>
 

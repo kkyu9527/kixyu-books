@@ -17,7 +17,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/moments')}" />
@@ -29,7 +29,7 @@
     </header>
 
     <main class="page-shell page-shell--wide" role="main">
-      <section class="catalog-page">
+      <section class="catalog-page" th:with="dateFormat=${theme.config.article.global_time_format ?: 'yyyy.MM.dd'}">
         <header class="book-heading">
           <p class="page-label">附录</p>
           <h1 class="page-title">瞬间</h1>
@@ -67,7 +67,7 @@
                 />
                 <div>
                   <p class="moment-author" th:text="${moment.owner.displayName}">作者</p>
-                  <p class="moment-date" th:text="${#dates.format(moment.spec.releaseTime, 'yyyy.MM.dd')}">2026.04.01</p>
+                  <p class="moment-date" th:text="${#dates.format(moment.spec.releaseTime, dateFormat)}">2026.04.01</p>
                 </div>
               </header>
 
@@ -97,11 +97,7 @@
           </li>
         </ol>
 
-        <nav class="pager" th:if="${moments.hasPrevious() or moments.hasNext()}">
-          <a class="pager-link" th:if="${moments.hasPrevious()}" th:href="${moments.prevUrl}">上一页</a>
-          <span class="pager-current" th:text="|第 ${moments.page} / ${moments.totalPages} 页|">第 1 / 1 页</span>
-          <a class="pager-link" th:if="${moments.hasNext()}" th:href="${moments.nextUrl}">下一页</a>
-        </nav>
+        <th:block th:replace="~{fragments/pagination :: bookPager(data=${moments}, ariaLabel='瞬间分页导航')}" />
       </section>
     </main>
 

@@ -22,6 +22,127 @@ spec:
           name: enable_change_color_scheme
           label: 允许访客切换配色
           value: true
+        - $formkit: attachment
+          name: night_logo
+          aspectRatio: 8/3
+          width: 160px
+          accepts:
+            - "image/*"
+          label: 黑暗模式 Logo
+          help: 深色模式下显示的站点标识，不填写时沿用站点 Logo。
+        - $formkit: checkbox
+          name: enable_custom_font
+          label: 启用自定义字体
+          value: false
+          help: 开启后使用下方配置的字体文件地址。
+        - $formkit: text
+          name: custom_font
+          label: 字体文件地址
+          help: 支持 woff2、woff、ttf、eot、svg，建议优先使用 woff2。
+    - group: cover
+      label: 扉页与卷首
+      formSchema:
+        - $formkit: text
+          name: mark_text
+          label: 扉页角标
+          value: 扉页
+        - $formkit: text
+          name: title_text
+          label: 扉页标题
+          help: 不填写时默认使用站点标题。
+        - $formkit: textarea
+          name: subtitle_text
+          label: 扉页副标题
+          rows: 3
+          help: 不填写时默认使用站点副标题。
+        - $formkit: textarea
+          name: note_text
+          label: 卷首说明
+          rows: 3
+          help: 用于展示一句安静的卷首短句或编者按。
+        - $formkit: text
+          name: preface_entry_title
+          label: 序入口标题
+          value: 序
+        - $formkit: textarea
+          name: preface_entry_note
+          label: 序入口说明
+          rows: 2
+          value: 从卷首进入，先读第一段话。
+        - $formkit: text
+          name: archive_entry_button_text
+          label: 首页主按钮文案
+          value: 开始阅读
+        - $formkit: text
+          name: preface_button_text
+          label: 序页按钮文案
+          value: 进入目录
+        - $formkit: text
+          name: featured_label
+          label: 卷首推荐角标
+          value: 卷首推荐
+        - $formkit: text
+          name: featured_title
+          label: 卷首推荐标题
+          value: 本卷必读
+    - group: article
+      label: 文章与时间
+      formSchema:
+        - $formkit: text
+          name: global_time_format
+          label: 全局时间格式
+          value: yyyy.MM.dd
+          help: 例如 yyyy.MM.dd、yyyy-MM-dd、yyyy年MM月dd日。
+        - $formkit: select
+          name: list_meta_items
+          label: 文章列表元信息
+          multiple: true
+          clearable: true
+          searchable: false
+          value:
+            - publish_time
+          help: 控制目录页、分类页、标签页的安静元信息展示。
+          options:
+            - value: publish_time
+              label: 发布日期
+            - value: owner
+              label: 作者
+        - $formkit: select
+          name: detail_meta_items
+          label: 文章详情元信息
+          multiple: true
+          clearable: true
+          searchable: false
+          value:
+            - publish_time
+            - read_time
+            - owner
+          help: 仅保留发布日期、阅读时长、作者这三类安静信息。
+          options:
+            - value: publish_time
+              label: 发布日期
+            - value: read_time
+              label: 阅读时长
+            - value: owner
+              label: 作者
+        - $formkit: select
+          name: post_navigation_scope
+          label: 文章末尾前后篇范围
+          value: global
+          help: 选择按全站文章顺序，或仅按当前文章所属的第一个分类来计算上一篇和下一篇。
+          options:
+            - value: global
+              label: 全站
+            - value: category
+              label: 同分类
+    - group: navigation
+      label: 导航
+      formSchema:
+        - $formkit: checkbox
+          name: enable_mobile_nav_drawer
+          label: 启用移动端导航抽屉
+          value: true
+          help: 关闭后移动端不显示右侧抽屉导航入口。
     - group: footer
       label: 页脚
       formSchema:
@@ -29,16 +150,41 @@ spec:
           name: enable
           label: 显示页脚
           value: true
-          help: 关闭后全站不显示页脚
+          help: 关闭后全站不显示页脚。
+        - $formkit: checkbox
+          name: show_title
+          label: 显示标题
+          value: true
         - $formkit: text
           name: title
           label: 标题
-          help: 不填写时默认使用站点标题
+          help: 不填写时默认使用站点标题。
+        - $formkit: checkbox
+          name: show_slogan
+          label: 显示说明
+          value: true
         - $formkit: textarea
           name: slogan
           label: 页脚说明
           rows: 3
-          help: 不填写时默认使用站点副标题
+          help: 不填写时默认使用站点副标题。
+        - $formkit: checkbox
+          name: show_beian
+          label: 显示备案信息
+          value: true
+        - $formkit: checkbox
+          name: show_site_time
+          label: 显示成书时间
+          value: false
+        - $formkit: text
+          name: site_time_label
+          label: 成书时间标题
+          value: 成书于
+          help: 例如“成书于”“开卷于”。
+        - $formkit: text
+          name: site_time
+          label: 成书时间
+          help: 建议填写与全局时间格式一致的日期文本。
     - group: beian
       label: 备案
       formSchema:

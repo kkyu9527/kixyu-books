@@ -17,7 +17,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/archives')}" />
@@ -29,12 +29,36 @@
     </header>
 
     <main class="page-shell page-shell--wide" role="main">
-      <section class="catalog-page">
+      <section
+        class="catalog-page"
+        th:with="featuredPosts=${postFinder.list({page: 1, size: 4, sort: {'spec.pinned,desc', 'spec.publishTime,desc', 'metadata.creationTimestamp,desc'}}).items},
+                 dateFormat=${theme.config.article.global_time_format ?: 'yyyy.MM.dd'},
+                 showListPublishTime=${theme.config.article.list_meta_items == null or #lists.contains(theme.config.article.list_meta_items, 'publish_time')},
+                 showListOwner=${theme.config.article.list_meta_items != null and #lists.contains(theme.config.article.list_meta_items, 'owner')}"
+      >
         <header class="book-heading">
           <!-- 目录页眉标题；如果你希望叫“章节目录”“全书目录”，修改这里即可。 -->
           <p class="page-label">全书目录</p>
-          <h1 class="page-title">全书目录</h1>
+          <h1 class="page-title">目录</h1>
         </header>
+
+        <section class="catalog-featured" th:if="${not #lists.isEmpty(featuredPosts) and featuredPosts[0].spec.pinned}">
+          <div class="catalog-featured-head">
+            <p class="page-label" th:text="${theme.config.cover.featured_label ?: '卷首推荐'}">卷首推荐</p>
+            <h2 class="catalog-featured-title" th:text="${theme.config.cover.featured_title ?: '本卷必读'}">本卷必读</h2>
+          </div>
+
+          <ol class="catalog-featured-list">
+            <li class="catalog-featured-item" th:each="featuredPost, featuredPostStat : ${featuredPosts}" th:if="${featuredPost.spec.pinned}">
+              <a class="catalog-featured-link" th:href="${featuredPost.status.permalink}">
+                <span class="catalog-featured-order" th:text="${#numbers.formatInteger(featuredPostStat.count, 2)}">01</span>
+                <div class="catalog-featured-body">
+                  <strong class="catalog-featured-name" th:text="${featuredPost.spec.title}">推荐文章</strong>
+                </div>
+              </a>
+            </li>
+          </ol>
+        </section>
 
         <!-- 目录内容来自 Halo 的归档数据，你后续只需要维护文章本身，不需要手写这里的列表。 -->
         <div class="catalog-groups" th:if="${archives.total gt 0}">
@@ -48,11 +72,21 @@
                 <ol class="catalog-list">
                   <li class="catalog-item" th:each="post : ${month.posts}">
                     <a class="catalog-link" th:href="${post.status.permalink}">
-                      <span class="catalog-item-title" th:text="${post.spec.title}">章节标题</span>
+                      <div class="catalog-item-body">
+                        <span class="catalog-item-title" th:text="${post.spec.title}">章节标题</span>
+                        <span
+                          class="catalog-item-meta"
+                          th:if="${showListOwner}"
+                          th:text="${not #strings.isEmpty(post.owner.displayName) ? post.owner.displayName : post.owner.name}"
+                        >
+                          作者
+                        </span>
+                      </div>
                       <time
                         class="catalog-item-date"
+                        th:if="${showListPublishTime}"
                         th:datetime="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
-                        th:text="${#dates.format(post.spec.publishTime, 'MM.dd')}"
+                        th:text="${#dates.format(post.spec.publishTime, dateFormat)}"
                       >
                         03.31
                       </time>
@@ -66,46 +100,7 @@
 
         <p class="empty-state" th:if="${archives.total == 0}">目录暂时为空。</p>
 
-        <nav class="pager" th:if="${archives.hasPrevious() or archives.hasNext()}" aria-label="目录分页导航">
-          <div class="pager-slot pager-slot--previous">
-            <a class="pager-link" th:if="${archives.hasPrevious()}" th:href="${archives.prevUrl}" rel="prev">上一页</a>
-            <span class="pager-link pager-link--disabled" th:unless="${archives.hasPrevious()}" aria-disabled="true">
-              上一页
-            </span>
-          </div>
-          <div class="pager-center">
-            <span class="pager-current" th:text="|第 ${archives.page} / ${archives.totalPages} 页|">
-              第 1 / 1 页
-            </span>
-            <form
-              class="pager-jump"
-              data-page-jump-form
-              method="get"
-              th:action="@{/archives}"
-              th:attr="data-page-current=${archives.page}, data-page-prev-url=${archives.prevUrl}, data-page-next-url=${archives.nextUrl}"
-            >
-              <label class="pager-jump-label" for="archive-page-jump">跳至</label>
-              <input
-                id="archive-page-jump"
-                class="pager-input"
-                data-page-jump-input
-                name="page"
-                type="number"
-                inputmode="numeric"
-                min="1"
-                th:attr="max=${archives.totalPages}, value=${archives.page}, aria-label=|输入页码后跳转，范围 1 到 ${archives.totalPages}|"
-              />
-              <span class="pager-jump-unit">页</span>
-              <button class="pager-link pager-link--button" type="submit">前往</button>
-            </form>
-          </div>
-          <div class="pager-slot pager-slot--next">
-            <a class="pager-link" th:if="${archives.hasNext()}" th:href="${archives.nextUrl}" rel="next">下一页</a>
-            <span class="pager-link pager-link--disabled" th:unless="${archives.hasNext()}" aria-disabled="true">
-              下一页
-            </span>
-          </div>
-        </nav>
+        <th:block th:replace="~{fragments/pagination :: bookPager(data=${archives}, ariaLabel='目录分页导航')}" />
       </section>
     </main>
 

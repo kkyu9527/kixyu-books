@@ -21,7 +21,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--reader">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '')}" />
@@ -47,7 +47,20 @@
         </button>
       </div>
 
-      <div class="post-layout" th:with="postCursor=${postFinder.cursor(post.metadata.name)}">
+      <div
+        class="post-layout"
+        th:with="postCursor=${postFinder.cursor(post.metadata.name)},
+                 navigationScope=${theme.config.article.post_navigation_scope ?: 'global'},
+                 useCategoryNavigation=${navigationScope == 'category' and post.categories != null and not #lists.isEmpty(post.categories)},
+                 navigationCategory=${useCategoryNavigation ? post.categories[0] : null},
+                 navigationPosts=${useCategoryNavigation ? postFinder.list({page: 1, size: 1000, categoryName: navigationCategory.metadata.name, sort: {'spec.publishTime,asc', 'metadata.creationTimestamp,asc'}}).items : null},
+                 navigationPostNames=${navigationPosts != null ? navigationPosts.![metadata.name] : null},
+                 navigationPostIndex=${navigationPostNames != null ? navigationPostNames.indexOf(post.metadata.name) : -1},
+                 categoryPrevious=${navigationPostIndex > 0 ? navigationPosts[navigationPostIndex - 1] : null},
+                 categoryNext=${navigationPostIndex >= 0 and navigationPostIndex < #lists.size(navigationPosts) - 1 ? navigationPosts[navigationPostIndex + 1] : null},
+                 navigationPrevious=${useCategoryNavigation and navigationPostIndex >= 0 ? categoryPrevious : (postCursor.hasPrevious() ? postCursor.previous : null)},
+                 navigationNext=${useCategoryNavigation and navigationPostIndex >= 0 ? categoryNext : (postCursor.hasNext() ? postCursor.next : null)}"
+      >
         <aside class="post-sidebar" aria-label="文章目录">
           <div class="post-outline" data-reader-outline hidden id="post-outline-panel">
             <div class="post-outline-head">
@@ -61,19 +74,44 @@
         </aside>
 
         <article class="post-article">
-          <header class="post-header">
+          <header
+            class="post-header"
+            th:with="wordCount=${#strings.length(#strings.defaultString(post.content.raw, ''))},
+                     readMinutes=${wordCount == 0 ? 1 : (wordCount + 399) / 400},
+                     authorName=${not #strings.isEmpty(post.owner.displayName) ? post.owner.displayName : post.owner.name},
+                     dateFormat=${theme.config.article.global_time_format ?: 'yyyy.MM.dd'},
+                     showDetailPublishTime=${theme.config.article.detail_meta_items == null or #lists.contains(theme.config.article.detail_meta_items, 'publish_time')},
+                     showDetailReadTime=${theme.config.article.detail_meta_items == null or #lists.contains(theme.config.article.detail_meta_items, 'read_time')},
+                     showDetailOwner=${theme.config.article.detail_meta_items == null or #lists.contains(theme.config.article.detail_meta_items, 'owner')}"
+          >
             <!-- 文章页页眉标识；如果你想改成“正文”“章节正文”等，可直接修改这里。 -->
             <p class="page-label">章节</p>
             <!-- 文章标题与正文内容都来自 Halo 文章数据，无需在模板里手填。 -->
             <h1 class="post-title" th:text="${post.spec.title}">文章标题</h1>
-            <p class="post-meta">
-              <time
-                th:datetime="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
-                th:text="${#dates.format(post.spec.publishTime, 'yyyy.MM.dd')}"
-              >
-                2026.03.31
-              </time>
-            </p>
+            <div
+              class="post-meta"
+              role="list"
+              aria-label="文章元信息"
+              th:if="${showDetailPublishTime or showDetailReadTime or showDetailOwner}"
+            >
+              <span class="post-meta-item" role="listitem" th:if="${showDetailPublishTime}">
+                <span class="post-meta-label">发布日期</span>
+                <time
+                  th:datetime="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                  th:text="${#dates.format(post.spec.publishTime, dateFormat)}"
+                >
+                  2026.03.31
+                </time>
+              </span>
+              <span class="post-meta-item" role="listitem" th:if="${showDetailReadTime}">
+                <span class="post-meta-label">阅读时长</span>
+                <span th:text="|约 ${readMinutes} 分钟|">约 1 分钟</span>
+              </span>
+              <span class="post-meta-item" role="listitem" th:if="${showDetailOwner}">
+                <span class="post-meta-label">作者</span>
+                <span th:text="${authorName}">作者名</span>
+              </span>
+            </div>
           </header>
 
           <!-- 正文区域输出文章 HTML 内容。 -->
@@ -83,15 +121,15 @@
           <nav class="post-navigation" aria-label="章节导航">
             <a
               class="post-navigation-link"
-              th:if="${postCursor.hasPrevious()}"
-              th:href="${postCursor.previous.status.permalink}"
+              th:if="${navigationPrevious != null}"
+              th:href="${navigationPrevious.status.permalink}"
             >
               <span class="post-navigation-label">上一章</span>
-              <strong class="post-navigation-title" th:text="${postCursor.previous.spec.title}">
+              <strong class="post-navigation-title" th:text="${navigationPrevious.spec.title}">
                 上一章标题
               </strong>
             </a>
-            <span class="post-navigation-spacer" th:unless="${postCursor.hasPrevious()}" aria-hidden="true"></span>
+            <span class="post-navigation-spacer" th:unless="${navigationPrevious != null}" aria-hidden="true"></span>
 
             <a class="post-navigation-link post-navigation-link--center" th:href="@{/archives}">
               <span class="post-navigation-label">回到</span>
@@ -100,15 +138,15 @@
 
             <a
               class="post-navigation-link post-navigation-link--next"
-              th:if="${postCursor.hasNext()}"
-              th:href="${postCursor.next.status.permalink}"
+              th:if="${navigationNext != null}"
+              th:href="${navigationNext.status.permalink}"
             >
               <span class="post-navigation-label">下一章</span>
-              <strong class="post-navigation-title" th:text="${postCursor.next.spec.title}">
+              <strong class="post-navigation-title" th:text="${navigationNext.spec.title}">
                 下一章标题
               </strong>
             </a>
-            <span class="post-navigation-spacer" th:unless="${postCursor.hasNext()}" aria-hidden="true"></span>
+            <span class="post-navigation-spacer" th:unless="${navigationNext != null}" aria-hidden="true"></span>
           </nav>
 
           <section id="comment" class="page-comment" th:if="${haloCommentEnabled}">

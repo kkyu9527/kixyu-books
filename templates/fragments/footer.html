@@ -5,23 +5,36 @@
   xmlns:halo="https://www.halo.run"
 >
   <th:block th:fragment="siteFooter(className)">
-    <footer th:if="${theme.config.footer.enable == null or theme.config.footer.enable}" th:class="${className}">
+    <footer
+      th:if="${theme.config.footer.enable == null or theme.config.footer.enable}"
+      th:class="${className}"
+      th:with="footerTitle=${theme.config.footer.title ?: site.title},
+               footerSlogan=${theme.config.footer.slogan ?: site.subtitle},
+               showFooterTitle=${theme.config.footer.show_title == null or theme.config.footer.show_title},
+               showFooterSlogan=${theme.config.footer.show_slogan == null or theme.config.footer.show_slogan},
+               showFooterBeian=${theme.config.footer.show_beian == null or theme.config.footer.show_beian},
+               showFooterSiteTime=${theme.config.footer.show_site_time == null or theme.config.footer.show_site_time}"
+    >
       <div class="footer-block">
-        <div class="footer-brand">
-          <p class="footer-title" th:text="${theme.config.footer.title ?: site.title}">Kixyu Books</p>
+        <div class="footer-brand" th:if="${showFooterTitle or (showFooterSlogan and not #strings.isEmpty(footerSlogan))}">
+          <p class="footer-title" th:if="${showFooterTitle}" th:text="${footerTitle}">Kixyu Books</p>
           <p
             class="footer-slogan"
-            th:if="${not #strings.isEmpty(theme.config.footer.slogan ?: site.subtitle)}"
-            th:text="${theme.config.footer.slogan ?: site.subtitle}"
+            th:if="${showFooterSlogan and not #strings.isEmpty(footerSlogan)}"
+            th:text="${footerSlogan}"
           >
             A quiet place for reading.
           </p>
         </div>
         <div class="footer-meta">
           <halo:footer />
+          <p class="footer-site-time" th:if="${showFooterSiteTime and not #strings.isEmpty(theme.config.footer.site_time)}">
+            <span class="footer-site-time-label" th:text="${theme.config.footer.site_time_label ?: '成书于'}">成书于</span>
+            <span class="footer-site-time-value" th:text="${theme.config.footer.site_time}">2026.04.02</span>
+          </p>
           <p
             class="footer-records"
-            th:if="${not #strings.isEmpty(theme.config.beian.icp_text) or not #strings.isEmpty(theme.config.beian.gongan_text)}"
+            th:if="${showFooterBeian and (not #strings.isEmpty(theme.config.beian.icp_text) or not #strings.isEmpty(theme.config.beian.gongan_text))}"
           >
             <a
               class="footer-record-link"

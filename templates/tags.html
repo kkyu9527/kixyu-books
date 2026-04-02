@@ -17,7 +17,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/tags')}" />

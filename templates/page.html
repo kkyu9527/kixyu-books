@@ -24,7 +24,7 @@
     th:with="isPreface=${singlePage.metadata.name == 'preface' or #strings.contains(singlePage.status.permalink, '/preface')}"
   >
     <header class="page-masthead page-masthead--reader">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', singlePage.status.permalink)}" />
@@ -45,7 +45,13 @@
         <div class="post-content" data-reader-content th:utext="${singlePage.content.content}"></div>
 
         <div class="preface-actions" th:if="${isPreface}">
-          <a class="button button--primary" th:href="@{/archives}">开始阅读</a>
+          <a
+            class="button button--primary"
+            th:href="@{/archives}"
+            th:text="${theme.config.cover.preface_button_text ?: '进入目录'}"
+          >
+            进入目录
+          </a>
         </div>
 
         <section id="comment" class="page-comment" th:if="${haloCommentEnabled}">

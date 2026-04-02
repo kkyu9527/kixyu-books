@@ -23,27 +23,38 @@
         </div>
         <div class="cover-copy">
           <!-- 封面页角标文案；如果你后续想换成“序章”“卷首”等，可直接修改这里。 -->
-          <p class="cover-mark">扉页</p>
+          <p class="cover-mark" th:text="${theme.config.cover.mark_text ?: '扉页'}">扉页</p>
           <!-- 封面主标题默认读取站点标题；如需固定文案，可改为你自己的文本。 -->
-          <h1 class="cover-title" th:text="${site.title}">Kixyu Books</h1>
+          <h1 class="cover-title" th:text="${theme.config.cover.title_text ?: site.title}">Kixyu Books</h1>
           <!-- 封面副标题默认读取站点副标题；如需固定引言或主题说明，可在这里替换。 -->
           <p
             class="cover-subtitle"
-            th:if="${not #strings.isEmpty(site.subtitle)}"
-            th:text="${site.subtitle}"
+            th:if="${not #strings.isEmpty(theme.config.cover.subtitle_text ?: site.subtitle)}"
+            th:text="${theme.config.cover.subtitle_text ?: site.subtitle}"
           >
             A quiet place for reading.
+          </p>
+          <p class="cover-note" th:if="${not #strings.isEmpty(theme.config.cover.note_text)}" th:text="${theme.config.cover.note_text}">
+            卷首说明
           </p>
         </div>
         <div class="cover-actions">
           <div class="cover-entry">
             <!-- 主入口按钮，默认进入序页。 -->
             <a class="cover-entry-link" th:href="@{/preface}">
-              <span class="cover-entry-title">序</span>
-              <span class="cover-entry-note">从卷首进入，先读第一段话。</span>
+              <span class="cover-entry-title" th:text="${theme.config.cover.preface_entry_title ?: '序'}">序</span>
+              <span class="cover-entry-note" th:text="${theme.config.cover.preface_entry_note ?: '从卷首进入，先读第一段话。'}">
+                从卷首进入，先读第一段话。
+              </span>
             </a>
             <!-- 目录入口，作为首页主按钮。 -->
-            <a class="button button--primary cover-entry-button" th:href="@{/archives}">开始阅读</a>
+            <a
+              class="button button--primary cover-entry-button"
+              th:href="@{/archives}"
+              th:text="${theme.config.cover.archive_entry_button_text ?: '开始阅读'}"
+            >
+              开始阅读
+            </a>
           </div>
           <nav class="cover-index" aria-label="主菜单">
             <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('cover-index-link', '')}" />

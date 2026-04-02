@@ -199,7 +199,8 @@ body.is-lightbox-open {
 
 .footer-title,
 .footer-slogan,
-.footer-records {
+.footer-records,
+.footer-site-time {
   margin: 0;
 }
 
@@ -216,6 +217,15 @@ body.is-lightbox-open {
 .footer-records {
   color: var(--kb-color-muted);
   line-height: 1.7;
+}
+
+.footer-site-time {
+  color: var(--kb-color-muted);
+  line-height: 1.7;
+}
+
+.footer-site-time-label {
+  margin-right: 0.35rem;
 }
 
 .footer-record-link {
@@ -265,9 +275,20 @@ body.is-lightbox-open {
   align-items: baseline;
 }
 
+.chapter-heading-copy {
+  min-width: 0;
+}
+
 .chapter-title {
   min-width: 0;
   font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.chapter-meta {
+  margin: 0.2rem 0 0;
+  color: var(--kb-color-muted);
+  font-size: 0.9rem;
 }
 
 .chapter-excerpt {

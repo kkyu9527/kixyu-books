@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+  <th:block
+    th:fragment="bookPager(data, ariaLabel)"
+    th:if="${data.totalPages > 1}"
+    th:with="patternUrl=${data.hasNext() ? data.nextUrl : (data.hasPrevious() ? data.prevUrl : '')}"
+  >
+    <nav class="pager pager--numbered" th:attr="aria-label=${ariaLabel != null ? ariaLabel : '分页导航'}">
+      <div class="pager-slot pager-slot--previous">
+        <a class="pager-link" th:if="${data.hasPrevious()}" th:href="${data.prevUrl}" rel="prev">上一页</a>
+        <span class="pager-link pager-link--disabled" th:unless="${data.hasPrevious()}" aria-disabled="true">
+          上一页
+        </span>
+      </div>
+
+      <div class="pager-center pager-center--numbered" th:attr="data-pagination-pattern-url=${patternUrl}">
+        <span class="pager-current" th:text="|第 ${data.page} / ${data.totalPages} 页|">第 1 / 1 页</span>
+
+        <ol class="pager-pages" role="list">
+          <th:block th:if="${data.totalPages <= 9}">
+            <li class="pager-page-item" th:each="index : ${#numbers.sequence(1, data.totalPages)}">
+              <span class="pager-page pager-page--current" th:if="${data.page == index}" aria-current="page" th:text="${index}">
+                1
+              </span>
+              <button
+                th:unless="${data.page == index}"
+                type="button"
+                class="pager-page"
+                data-pagination-link
+                th:attr="data-page=${index}, aria-label=|转到第 ${index} 页|, title=|第 ${index} 页|"
+                th:text="${index}"
+              >
+                1
+              </button>
+            </li>
+          </th:block>
+
+          <th:block
+            th:unless="${data.totalPages <= 9}"
+            th:with="windowStart=${(data.page > 5) ? data.page - 2 : 1},
+                     windowEnd=${windowStart + ((data.page > 5) ? ((data.page < data.totalPages - 4) ? 4 : 6) : ((data.page < data.totalPages - 4) ? 6 : 8))},
+                     start=${(windowEnd > data.totalPages) ? windowStart - windowEnd + data.totalPages : windowStart},
+                     end=${(windowEnd > data.totalPages) ? data.totalPages : windowEnd}"
+          >
+            <th:block th:if="${data.page > 5}">
+              <li class="pager-page-item">
+                <button
+                  type="button"
+                  class="pager-page"
+                  data-pagination-link
+                  data-page="1"
+                  aria-label="转到第 1 页"
+                  title="第 1 页"
+                >
+                  1
+                </button>
+              </li>
+              <li class="pager-page-item">
+                <span class="pager-ellipsis" aria-hidden="true">…</span>
+              </li>
+            </th:block>
+
+            <li class="pager-page-item" th:each="index : ${#numbers.sequence((end > data.totalPages) ? start - end + data.totalPages : start, (end > data.totalPages) ? data.totalPages : end)}">
+              <span class="pager-page pager-page--current" th:if="${data.page == index}" aria-current="page" th:text="${index}">
+                1
+              </span>
+              <button
+                th:unless="${data.page == index}"
+                type="button"
+                class="pager-page"
+                data-pagination-link
+                th:attr="data-page=${index}, aria-label=|转到第 ${index} 页|, title=|第 ${index} 页|"
+                th:text="${index}"
+              >
+                1
+              </button>
+            </li>
+
+            <th:block th:if="${data.page < data.totalPages - 4}">
+              <li class="pager-page-item">
+                <span class="pager-ellipsis" aria-hidden="true">…</span>
+              </li>
+              <li class="pager-page-item">
+                <button
+                  type="button"
+                  class="pager-page"
+                  data-pagination-link
+                  th:attr="data-page=${data.totalPages}, aria-label=|转到第 ${data.totalPages} 页|, title=|第 ${data.totalPages} 页|"
+                  th:text="${data.totalPages}"
+                >
+                  1
+                </button>
+              </li>
+            </th:block>
+          </th:block>
+        </ol>
+      </div>
+
+      <div class="pager-slot pager-slot--next">
+        <a class="pager-link" th:if="${data.hasNext()}" th:href="${data.nextUrl}" rel="next">下一页</a>
+        <span class="pager-link pager-link--disabled" th:unless="${data.hasNext()}" aria-disabled="true">
+          下一页
+        </span>
+      </div>
+    </nav>
+  </th:block>
+</html>

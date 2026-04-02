@@ -24,6 +24,25 @@
   </th:block>
 
   <th:block th:fragment="themeStyles(version)">
+    <style>
+:root {
+  --kb-font-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+}
+    </style>
+    <style
+      th:if="${theme.config.style.enable_custom_font != null and theme.config.style.enable_custom_font and not #strings.isEmpty(theme.config.style.custom_font)}"
+      th:inline="text"
+    >
+@font-face {
+  font-family: "KB Custom Serif";
+  src: url("[(${theme.config.style.custom_font})]");
+  font-display: swap;
+}
+
+:root {
+  --kb-font-body: "KB Custom Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+}
+    </style>
     <link rel="stylesheet" th:href="@{/assets/css/base.css?v={version}(version=${version})}" />
     <link rel="stylesheet" th:href="@{/assets/css/catalog.css?v={version}(version=${version})}" />
     <link rel="stylesheet" th:href="@{/assets/css/reader.css?v={version}(version=${version})}" />

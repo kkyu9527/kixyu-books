@@ -17,7 +17,7 @@
   </head>
   <body class="theme-root">
     <header class="page-masthead page-masthead--wide">
-      <a class="site-mark" th:href="@{/}" th:text="${site.title}">Kixyu Books</a>
+      <th:block th:replace="~{fragments/site :: siteMark}"></th:block>
       <nav class="masthead-nav" aria-label="主要导航">
         <div class="masthead-nav-links">
           <th:block th:replace="~{fragments/navigation :: primaryMenuLinks('masthead-link', '/categories')}" />
@@ -29,7 +29,12 @@
     </header>
 
     <main class="page-shell page-shell--wide" role="main">
-      <section class="catalog-page">
+      <section
+        class="catalog-page"
+        th:with="dateFormat=${theme.config.article.global_time_format ?: 'yyyy.MM.dd'},
+                 showListPublishTime=${theme.config.article.list_meta_items == null or #lists.contains(theme.config.article.list_meta_items, 'publish_time')},
+                 showListOwner=${theme.config.article.list_meta_items != null and #lists.contains(theme.config.article.list_meta_items, 'owner')}"
+      >
         <header class="book-heading">
           <p class="page-label">分类</p>
           <h1 class="page-title" th:text="${category.spec.displayName}">分类名称</h1>
@@ -39,11 +44,21 @@
           <li class="chapter-item" th:each="item : ${posts.items}">
             <a class="chapter-link" th:href="${item.status.permalink}">
               <div class="chapter-heading">
-                <span class="chapter-title" th:text="${item.spec.title}">文章标题</span>
+                <div class="chapter-heading-copy">
+                  <span class="chapter-title" th:text="${item.spec.title}">文章标题</span>
+                  <p
+                    class="chapter-meta"
+                    th:if="${showListOwner}"
+                    th:text="${not #strings.isEmpty(item.owner.displayName) ? item.owner.displayName : item.owner.name}"
+                  >
+                    作者
+                  </p>
+                </div>
                 <time
                   class="chapter-date"
+                  th:if="${showListPublishTime}"
                   th:datetime="${#dates.format(item.spec.publishTime, 'yyyy-MM-dd')}"
-                  th:text="${#dates.format(item.spec.publishTime, 'yyyy.MM.dd')}"
+                  th:text="${#dates.format(item.spec.publishTime, dateFormat)}"
                 >
                   2026.03.31
                 </time>
@@ -61,11 +76,7 @@
 
         <p class="empty-state" th:if="${posts.total == 0}">这个分类下还没有文章。</p>
 
-        <nav class="pager" th:if="${posts.hasPrevious() or posts.hasNext()}">
-          <a class="pager-link" th:if="${posts.hasPrevious()}" th:href="${posts.prevUrl}">上一页</a>
-          <span class="pager-current" th:text="|第 ${posts.page} / ${posts.totalPages} 页|">第 1 / 1 页</span>
-          <a class="pager-link" th:if="${posts.hasNext()}" th:href="${posts.nextUrl}">下一页</a>
-        </nav>
+        <th:block th:replace="~{fragments/pagination :: bookPager(data=${posts}, ariaLabel='分类分页导航')}" />
       </section>
     </main>
 

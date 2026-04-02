@@ -9,10 +9,12 @@
     <th:block th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}">
       <a
         th:each="menuItem : ${menu.menuItems}"
-        th:with="normalizedCurrentPath=${currentPath != null ? currentPath : ''}, isCurrent=${not #strings.isEmpty(normalizedCurrentPath) and (menuItem.status.href == normalizedCurrentPath or #strings.endsWith(menuItem.status.href, normalizedCurrentPath) or #strings.endsWith(normalizedCurrentPath, menuItem.status.href) or #strings.startsWith(menuItem.status.href, normalizedCurrentPath + '/') or #strings.startsWith(normalizedCurrentPath, menuItem.status.href + '/'))}"
+        th:with="normalizedCurrentPath=${currentPath != null ? currentPath : ''},
+                 menuHref=${#strings.defaultString(menuItem.status.href, '')},
+                 isCurrent=${not #strings.isEmpty(normalizedCurrentPath) and not #strings.isEmpty(menuHref) and (menuHref == normalizedCurrentPath or #strings.endsWith(menuHref, normalizedCurrentPath) or #strings.endsWith(normalizedCurrentPath, menuHref) or #strings.startsWith(menuHref, normalizedCurrentPath + '/') or #strings.startsWith(normalizedCurrentPath, menuHref + '/'))}"
         th:class="${linkClass}"
         th:classappend="${isCurrent ? ' is-current' : ''}"
-        th:href="@{${menuItem.status.href}}"
+        th:href="${#strings.defaultString(menuItem.status.href, '#')}"
         th:text="${menuItem.status.displayName}"
         th:target="${menuItem.spec.target?.value}"
       >
@@ -21,7 +23,51 @@
     </th:block>
   </th:block>
 
-  <th:block th:fragment="headerUtilities(includeSearch, compactTheme)">
+  <th:block th:fragment="drawerMenuList(items, depth)">
+    <ul class="menu-drawer-list" th:if="${items != null and not #lists.isEmpty(items)}" th:classappend="${depth gt 0 ? ' menu-drawer-list--nested' : ''}">
+      <li class="menu-drawer-item" th:each="menuItem : ${items}">
+        <a
+          class="menu-drawer-link"
+          th:href="${#strings.defaultString(menuItem.status.href, '#')}"
+          th:text="${menuItem.status.displayName}"
+          th:target="${menuItem.spec.target?.value}"
+        >
+          菜单
+        </a>
+        <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
+          <th:block th:replace="~{::drawerMenuList(items=${menuItem.children}, depth=${depth + 1})}" />
+        </th:block>
+      </li>
+    </ul>
+  </th:block>
+
+  <th:block
+    th:fragment="headerUtilities(includeSearch, compactTheme)"
+    th:with="menu=${menuFinder.getPrimary()},
+             drawerEnabled=${theme.config.navigation.enable_mobile_nav_drawer == null or theme.config.navigation.enable_mobile_nav_drawer}"
+  >
+    <details
+      class="menu-drawer"
+      data-menu-drawer
+      th:if="${drawerEnabled and menu != null and not #lists.isEmpty(menu.menuItems)}"
+    >
+      <summary class="menu-drawer-trigger" aria-label="打开导航抽屉" title="打开导航抽屉">导航</summary>
+      <div class="menu-drawer-backdrop" data-menu-drawer-close aria-hidden="true"></div>
+      <div class="menu-drawer-panel" role="dialog" aria-modal="true" aria-label="站点导航">
+        <div class="menu-drawer-head">
+          <div class="menu-drawer-copy">
+            <p class="page-label">导航</p>
+          </div>
+          <button type="button" class="menu-drawer-close" data-menu-drawer-close aria-label="收起导航抽屉">
+            收起
+          </button>
+        </div>
+        <nav class="menu-drawer-nav" aria-label="移动端菜单">
+          <th:block th:replace="~{::drawerMenuList(items=${menu.menuItems}, depth=0)}" />
+        </nav>
+      </div>
+    </details>
+
     <button
       type="button"
       class="search-trigger"

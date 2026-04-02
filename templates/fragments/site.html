@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+  <th:block th:fragment="siteMark">
+    <a
+      class="site-mark site-mark--brand"
+      th:href="@{/}"
+      th:with="brandLogo=${site.logo ?: theme.spec.logo},
+               nightLogo=${theme.config.style.night_logo ?: brandLogo},
+               hasLogo=${not #strings.isEmpty(brandLogo)}"
+    >
+      <span class="site-mark-logo" th:if="${hasLogo}" aria-hidden="true">
+        <img class="site-mark-image site-mark-image--light" th:src="${brandLogo}" alt="" />
+        <img class="site-mark-image site-mark-image--dark" th:src="${nightLogo}" alt="" />
+      </span>
+      <span class="site-mark-text" th:text="${site.title}">Kixyu Books</span>
+    </a>
+  </th:block>
+</html>
